@@ -1,0 +1,143 @@
+.aboutSection {
+  position: relative;
+  width: 100%;
+  padding: 8rem 2rem;
+  background-color: transparent;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow-x: clip; /* TAMBAHKAN INI */
+}
+
+/* GANTI .header MENJADI INI */
+.headerWrapper {
+  position: relative;
+  text-align: center;
+  margin-bottom: 6rem;
+  padding: 4rem 0; 
+}
+
+.headerContent {
+  position: relative;
+  z-index: 10; 
+}
+
+/* TAMBAHKAN CLASS ASET MELAYANG */
+.floatingAsset {
+  position: absolute;
+  z-index: 1; 
+  pointer-events: none; 
+}
+
+.img {
+  object-fit: contain;
+  width: 100%;
+  height: auto;
+}
+
+.asset1 { top: -20%; left: 10%; width: 140px; }
+.asset2 { top: 0%; right: 5%; width: 110px; }
+.asset3 { top: 50%; left: 0%; width: 130px; }
+.asset4 { top: 60%; right: 8%; width: 150px; }
+.asset5 { bottom: -30%; left: 15%; width: 120px; }
+.asset6 { bottom: -20%; right: 20%; width: 130px; }
+
+@media (max-width: 768px) {
+  .asset1, .asset2, .asset3, .asset4, .asset5, .asset6 {
+    width: 60px;
+    opacity: 0.5;
+  }
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #ffffff, #a1a1aa);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.timelineContainer {
+  position: relative;
+  width: 100%;
+  max-width: 1200px; /* Diperlebar dari 1000px menjadi 1200px */
+  margin: 0 auto;
+  min-height: 800px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* KUNCI GARIS DINAMIS: SVG overlay di belakang kartu */
+.svgWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.svgLine {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Layout Baris Kartu Zig-Zag */
+.cardRow {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  width: 100%;
+}
+
+.leftAlign {
+  justify-content: flex-start;
+}
+
+.rightAlign {
+  justify-content: flex-end;
+}
+
+/* Desain Kartu (Dark Clean) */
+.card {
+  width: 40%; /* Dikecilkan dari 45% agar jarak tengah semakin lebar */
+  background-color: #09090b;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.cardRole {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cardCompany {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #a1a1aa;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cardDesc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e4e4e7;
+  margin: 0;
+}
+
+/* Responsif: Menjadi satu kolom lurus di HP */
+@media (max-width: 768px) {
+  .card { width: 100%; }
+  .timelineContainer { gap: 4rem; min-height: auto; }
+  .svgWrapper { display: none; } /* Garis disembunyikan di HP agar lebih rapi */
+}

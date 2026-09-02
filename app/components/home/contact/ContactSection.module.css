@@ -1,0 +1,281 @@
+.contactSection {
+  position: relative;
+  width: 100%;
+  padding: 8rem 2rem 10rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow-x: clip; /* TAMBAHKAN INI */
+}
+
+/* GANTI .header MENJADI INI */
+.headerWrapper {
+  position: relative;
+  text-align: center;
+  margin-bottom: 6rem;
+  padding: 4rem 0; 
+}
+
+.headerContent {
+  position: relative;
+  z-index: 10; 
+}
+
+/* TAMBAHKAN CLASS ASET MELAYANG */
+.floatingAsset {
+  position: absolute;
+  z-index: 1; 
+  pointer-events: none; 
+}
+
+.img {
+  object-fit: contain;
+  width: 100%;
+  height: auto;
+}
+
+.asset1 { top: -20%; left: 10%; width: 140px; }
+.asset2 { top: 0%; right: 5%; width: 110px; }
+.asset3 { top: 50%; left: 0%; width: 130px; }
+.asset4 { top: 60%; right: 8%; width: 150px; }
+.asset5 { bottom: -30%; left: 15%; width: 120px; }
+.asset6 { bottom: -20%; right: 20%; width: 130px; }
+
+@media (max-width: 768px) {
+  .asset1, .asset2, .asset3, .asset4, .asset5, .asset6 {
+    width: 60px;
+    opacity: 0.5;
+  }
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #ffffff, #a1a1aa);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  color: #a1a1aa;
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Layout ala Bento Box */
+.grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: #09090b;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2rem;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.card:hover {
+  border-color: rgba(179, 0, 255, 0.6);
+  box-shadow: 0 10px 40px rgba(179, 0, 255, 0.15);
+}
+
+.cardTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.cardDesc {
+  color: #a1a1aa;
+  font-size: 1.125rem;
+  margin-bottom: 3rem;
+  max-width: 90%;
+}
+
+/* Tombol Email dengan Tema Neon */
+.neonButton {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(90deg, #180029 0%, #b300ff 50%, #ffa67a 100%);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.125rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(179, 0, 255, 0.3);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.neonButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 35px rgba(255, 166, 122, 0.5);
+}
+
+/* Daftar Social Media */
+.socialList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.socialItem {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: #e4e4e7;
+  text-decoration: none;
+  font-size: 1.125rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.socialItem:hover {
+  color: #ffa67a;
+  transform: translateX(10px);
+}
+
+.iconBox {
+  width: 54px;
+  height: 54px;
+  border-radius: 1rem;
+  background-color: #18181b;
+  border: 1px solid #27272a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.socialItem:hover .iconBox {
+  border-color: #ffa67a;
+  box-shadow: 0 0 15px rgba(255, 166, 122, 0.2);
+}
+
+.locationBadge {
+  margin-top: auto;
+  padding-top: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #a1a1aa;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Responsif HP */
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+  .cardTitle { font-size: 2rem; }
+  .card { padding: 2rem; }
+}
+
+/* Responsif untuk Tablet (Layar di bawah 1024px) */
+@media (max-width: 1024px) {
+  .contactSection {
+    padding: 6rem 1.5rem 8rem 1.5rem;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    padding: 0 1rem;
+  }
+
+  .grid {
+    /* Mengubah menjadi 1 kolom di tablet agar Bento Box tidak terlalu berdesakan */
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 2.5rem;
+  }
+
+  .cardTitle {
+    font-size: 2.25rem;
+  }
+}
+
+/* Responsif untuk Mobile (Layar di bawah 768px) */
+@media (max-width: 768px) {
+  .contactSection {
+    padding: 4rem 1rem 6rem 1rem;
+  }
+
+  .headerWrapper {
+    margin-bottom: 4rem;
+    padding: 2rem 0;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .card {
+    padding: 1.75rem;
+    border-radius: 1.5rem;
+  }
+
+  .cardTitle {
+    font-size: 1.75rem;
+  }
+
+  .cardDesc {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Tombol membentang penuh di HP agar mudah di-tap */
+  .neonButton {
+    width: 100%;
+    justify-content: center;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+  }
+
+  .socialList {
+    gap: 1.25rem;
+  }
+
+  .iconBox {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+  }
+
+  .socialItem {
+    font-size: 1rem;
+    gap: 1rem;
+  }
+
+  .locationBadge {
+    padding-top: 2.5rem;
+    font-size: 0.75rem;
+  }
+}

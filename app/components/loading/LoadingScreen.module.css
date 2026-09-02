@@ -1,0 +1,119 @@
+.loadingWrapper {
+  position: fixed;
+  /* Menggunakan dvh (Dynamic Viewport Height) adalah obat paling ampuh untuk Safari iOS */
+  top: -20dvh; 
+  left: -10vw;
+  width: 120vw;
+  height: 150dvh; 
+  z-index: 999999;
+  display: flex;
+  overflow: hidden;
+}
+
+/* PINTU KIRI */
+.leftDoor {
+  position: relative;
+  width: 50%; /* 50% dari 200vw = 100vw (Ujung kanannya pas di tengah layar) */
+  height: 100%; /* 100% dari 200vh = 200vh */
+  background-color: #09090b;
+  z-index: 2; 
+}
+
+/* PINTU KANAN */
+.rightDoor {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  background-color: #09090b;
+  border-left: 1px solid rgba(255, 255, 255, 0.05); 
+  z-index: 1;
+}
+
+/* WADAH BULAT (Menempel di pintu kiri, memanjang ke kanan) */
+.circleContainer {
+  position: absolute;
+  top: 50%;
+  right: -120px; /* Separuh dari lebarnya (240px) agar pas di tengah layar */
+  transform: translateY(-50%);
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background-color: #09090b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 50px rgba(0,0,0,0.8); /* Bayangan memisahkan bulatan dengan latar */
+}
+
+/* SVG NEON (Diputar -90deg agar garis mulai dari jam 12 atas) */
+.svgNeon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); 
+}
+
+/* TEKS DALAM BULATAN */
+.textWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+.loadingText {
+  color: #a1a1aa;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.progressText {
+  color: #ffffff;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(90deg, #b300ff, #ffa67a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Responsif untuk Tablet (Layar di bawah 1024px) */
+@media (max-width: 1024px) {
+  .circleContainer {
+    width: 200px;
+    height: 200px;
+    right: -100px; /* Selalu pastikan right adalah minus setengah dari width */
+  }
+
+  .loadingText {
+    font-size: 0.75rem;
+  }
+
+  .progressText {
+    font-size: 2.5rem;
+  }
+}
+
+/* Responsif untuk Mobile (Layar di bawah 768px) */
+@media (max-width: 768px) {
+  .circleContainer {
+    width: 160px;
+    height: 160px;
+    right: -80px; /* Minus setengah dari 160px agar tetap presisi di tengah */
+  }
+
+  .loadingText {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.25rem;
+  }
+
+  .progressText {
+    font-size: 2rem;
+  }
+}

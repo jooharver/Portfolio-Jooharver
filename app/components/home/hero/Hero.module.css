@@ -1,0 +1,303 @@
+.heroSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 2rem;
+  width: 100%;
+  overflow-x: clip; /* Memotong teks raksasa yang lewat batas layar tanpa merusak sticky section lain */
+}
+
+/* Teks Raksasa */
+.title {
+  font-size: 15vw;
+  margin-left: 2rem;
+  font-weight: 900;
+  margin-bottom: 0;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  background: linear-gradient(to bottom right, #ffffff, #52525b);
+  -webkit-background-clip: text;
+  color: transparent;
+  position: relative;
+  z-index: 1; 
+  white-space: nowrap;
+}
+
+/* Pembagian Layout: Kiri, Tengah, Kanan */
+.middleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  /* Lebar disesuaikan agar persis memeluk lebar font 15vw */
+  width: 80vw; 
+  padding: 0; 
+  
+  /* Menurunkan Avatar menjauhi teks */
+  margin-top: -6vw; 
+  
+  position: relative;
+  z-index: 10; 
+}
+
+/* Sisi Kiri: Deskripsi */
+.leftContent {
+  flex: 1;
+  text-align: left;
+}
+
+.role {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #e4e4e7;
+}
+
+.description {
+  color: #a1a1aa;
+  max-width: 20rem;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Sisi Tengah: Avatar & Bayangan */
+.centerContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 20; 
+}
+
+.imageFloating {
+  filter: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.7));
+}
+
+/* Efek 2 Layer Avatar & X-Ray Masking */
+.avatarContainer {
+  position: relative;
+  width: 380px; 
+  cursor: crosshair;
+  /* Nilai default masking jauh di luar layar */
+  --x: -9999px; 
+  --y: -9999px;
+}
+
+@media (min-width: 1024px) {
+  .avatarContainer { 
+    width: 450px; 
+  }
+}
+
+.imageBase, .imageOverlay {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Layer Manusia (Bawah) - Area kursor transparan, sisanya hitam solid */
+.imageBase {
+  -webkit-mask-image: radial-gradient(
+    circle 110px at var(--x) var(--y), 
+    transparent 0%, 
+    transparent 70%, 
+    black 100%
+  );
+  mask-image: radial-gradient(
+    circle 110px at var(--x) var(--y), 
+    transparent 0%, 
+    transparent 70%, 
+    black 100%
+  );
+}
+
+/* Layer Robot (Atas) - Area kursor hitam solid (terlihat), sisanya transparan */
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  
+  -webkit-mask-image: radial-gradient(
+    circle 110px at var(--x) var(--y), 
+    black 0%, 
+    black 70%, 
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle 110px at var(--x) var(--y), 
+    black 0%, 
+    black 70%, 
+    transparent 100%
+  );
+}
+
+.shadow {
+  width: 12rem;
+  height: 2rem;
+  background-color: black;
+  border-radius: 100%;
+  filter: blur(25px);
+  margin-top: -3rem;
+}
+
+/* Sisi Kanan: Tombol */
+.rightContent {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ctaButton {
+  padding: 1.25rem 3rem;
+  background: linear-gradient(90deg, #180029 0%, #b300ff 50%, #ffa67a 100%);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(179, 0, 255, 0.4);
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.ctaButton:hover {
+  transform: scale(1.05) rotate(-3deg);
+  box-shadow: 0 0 40px rgba(255, 166, 122, 0.6);
+}
+
+/* Responsif untuk Layar HP */
+@media (max-width: 768px) {
+  .middleRow {
+    flex-direction: column;
+    width: 90vw;
+    margin-top: -2rem;
+  }
+  .leftContent {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .description {
+    margin: 0 auto;
+  }
+  .rightContent {
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .avatarContainer {
+    width: 300px;
+  }
+}
+
+/* Efek Kursor Berkedip */
+.cursor {
+  display: inline-block;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff; /* Memaksa agar kursor tidak ikut transparan kena efek gradient teks */
+  font-weight: 400;
+  animation: blink 1s step-end infinite;
+  margin-left: 1vw;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Responsif untuk Tablet (Layar di bawah 1024px) */
+@media (max-width: 1024px) {
+  .middleRow {
+    flex-direction: column;
+    width: 90vw;
+    margin-top: 2rem;
+    gap: 3rem; /* Memberi jarak antar elemen saat ditumpuk vertikal */
+  }
+
+  .leftContent {
+    text-align: center;
+    order: 2; /* Memindahkan teks ke bawah avatar */
+  }
+
+  .description {
+    margin: 0 auto;
+    max-width: 28rem;
+  }
+
+  .centerContent {
+    order: 1; /* Memastikan avatar selalu di atas saat ditumpuk */
+  }
+
+  .avatarContainer {
+    width: 320px;
+  }
+
+  .rightContent {
+    justify-content: center;
+    order: 3; /* Memindahkan tombol ke paling bawah */
+  }
+}
+
+/* Responsif untuk Mobile (Layar di bawah 768px) */
+@media (max-width: 768px) {
+  .heroSection {
+    margin-top: 4rem;
+  }
+
+  .title {
+    font-size: 18vw; /* Sedikit dibesarkan agar proporsional di HP */
+    margin-left: 0; /* Menghapus margin kiri agar presisi di tengah */
+  }
+
+  .middleRow {
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .role {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .avatarContainer {
+    width: 250px; /* Mengecilkan avatar agar tidak mentok tepi layar HP */
+  }
+
+  .shadow {
+    width: 9rem;
+    height: 1.5rem;
+    margin-top: -2rem;
+    filter: blur(15px);
+  }
+
+  .ctaButton {
+    margin-top: -2rem;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+}
+
+/* Efek Kursor Berkedip (Tetap dipertahankan di bagian bawah) */
+.cursor {
+  display: inline-block;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  font-weight: 400;
+  animation: blink 1s step-end infinite;
+  margin-left: 1vw;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
