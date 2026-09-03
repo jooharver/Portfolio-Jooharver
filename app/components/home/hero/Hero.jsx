@@ -3,25 +3,25 @@
 import { useEffect, useRef, useState } from "react"; 
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Mail } from "lucide-react";
+import { Anton } from "next/font/google";
 import styles from "./Hero.module.css";
 
+const anton = Anton({ subsets: ["latin"], weight: "400" });
+
 export default function Hero() {
-  // 1. STATE UNTUK EFEK TYPEWRITER
-  const fullText = "HI, IM EKA";
+  const fullText = "HI, I'M EKA";
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     let timer;
-    // Jika teks utuh dan tidak sedang menghapus -> Jeda 2 detik lalu hapus
     if (!isDeleting && displayText === fullText) {
       timer = setTimeout(() => setIsDeleting(true), 3000);
     } 
-    // Jika teks habis dan sedang menghapus -> Jeda 0.5 detik lalu ngetik lagi
     else if (isDeleting && displayText === "") {
       timer = setTimeout(() => setIsDeleting(false), 500);
     } 
-    // Proses ngetik (150ms) atau menghapus (100ms)
     else {
       const typingSpeed = isDeleting ? 100 : 150;
       timer = setTimeout(() => {
@@ -30,11 +30,9 @@ export default function Hero() {
         );
       }, typingSpeed);
     }
-
     return () => clearTimeout(timer);
   }, [displayText, isDeleting]);
 
-  // 2. SETUP EFEK PARALAKS
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springX = useSpring(mouseX, { stiffness: 150, damping: 15 });
@@ -55,7 +53,6 @@ export default function Hero() {
     return () => window.removeEventListener("mousemove", handleGlobalMouseMove);
   }, [mouseX, mouseY]);
 
-  // 3. FUNGSI UNTUK MELACAK KURSOR X-RAY
   const handleAvatarMouseMove = (e) => {
     if (!avatarRef.current) return;
     const rect = avatarRef.current.getBoundingClientRect();
@@ -78,10 +75,9 @@ export default function Hero() {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className={styles.title}
+        className={`${styles.title} ${anton.className}`}
       >
         {displayText}
-        {/* Pastikan class .cursor sudah ditambahkan di Hero.module.css */}
         <span className={styles.cursor}>|</span>
       </motion.h1>
 
@@ -93,10 +89,13 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className={styles.leftContent}
         >
-          <h2 className={styles.role}>Software Developer</h2>
-          <p className={styles.description}>
-            Membangun ekosistem aplikasi web & mobile dengan performa tinggi.
-          </p>
+          <div className={styles.infoBlock}>
+            <h2 className={styles.role}>Software Developer</h2>
+            <div className={styles.divider}></div>
+            <p className={styles.description}>
+              Membangun ekosistem aplikasi web & mobile dengan performa tinggi.
+            </p>
+          </div>
         </motion.div>
 
         <motion.div style={{ x: moveX, y: moveY }} className={styles.centerContent}>
@@ -129,7 +128,6 @@ export default function Hero() {
               />
             </div>
           </motion.div>
-          
           <motion.div 
             animate={{ scale: [1, 0.8, 1], opacity: [0.3, 0.1, 0.3] }}
             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
@@ -143,7 +141,15 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className={styles.rightContent}
         >
-          <button className={styles.ctaButton}>Contact Me</button>
+          <a href="mailto:ekakrisnaferian@gmail.com" className={styles.ctaButton}>
+            <div className={styles.ctaIconWrapper}>
+              <Mail size={24} />
+            </div>
+            <div className={styles.ctaTextWrapper}>
+              <span className={styles.ctaLabel}>Available for Hire</span>
+              <span className={styles.ctaTitle}>Contact Me</span>
+            </div>
+          </a>
         </motion.div>
 
       </div>

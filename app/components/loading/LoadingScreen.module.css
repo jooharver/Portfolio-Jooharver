@@ -1,20 +1,22 @@
 .loadingWrapper {
   position: fixed;
-  /* Menggunakan dvh (Dynamic Viewport Height) adalah obat paling ampuh untuk Safari iOS */
-  top: -20dvh; 
+  /* Mengunci dari 20% di atas layar hingga 20% melewati batas bawah layar */
+  top: -20vh; 
+  bottom: -20vh; 
   left: -10vw;
   width: 120vw;
-  height: 150dvh; 
   z-index: 999999;
   display: flex;
+  /* Memaksa pintu meregang penuh menutupi seluruh tinggi wrapper */
+  align-items: stretch; 
   overflow: hidden;
 }
 
 /* PINTU KIRI */
 .leftDoor {
   position: relative;
-  width: 50%; /* 50% dari 200vw = 100vw (Ujung kanannya pas di tengah layar) */
-  height: 100%; /* 100% dari 200vh = 200vh */
+  width: 50%; 
+  height: 100%; 
   background-color: #09090b;
   z-index: 2; 
 }

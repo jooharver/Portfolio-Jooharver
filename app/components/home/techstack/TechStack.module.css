@@ -1,103 +1,210 @@
+/* --- SPACING & CONTAINER --- */
+.scrollTrack {
+  width: 100%;
+  margin-top: 12rem; 
+  position: relative;
+  overflow-x: clip; 
+}
+
+/* --- AMBIENT NEON GLOW --- */
+.ambientGlow {
+  position: absolute;
+  top: -16rem; 
+  left: -10%; 
+  width: 120%; 
+  height: 36rem; 
+  background: 
+    linear-gradient(90deg, transparent 0%, rgba(179, 0, 255, 0.25) 30%, rgba(255, 166, 122, 0.1) 50%, rgba(179, 0, 255, 0.25) 70%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, rgba(179, 0, 255, 0.15) 35%, rgba(255, 166, 122, 0.05) 50%, rgba(179, 0, 255, 0.15) 65%, transparent 100%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .techSection {
   position: relative;
   width: 100%;
-  padding: 6rem 0;
-  overflow: hidden; /* Pastikan slider logo tidak menembus batas viewport */
+  padding: 8rem 0; 
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem; 
   background-color: transparent;
+  z-index: 1;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
-/* Container untuk baris logo yang panjangnya melebihi layar */
+/* --- TITLE SCROLL FILL EFFECT (BARU) --- */
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.techTitle {
+  font-family: 'Craze', sans-serif;
+  font-size: 11rem; /* Ukuran besar */
+  letter-spacing: 12px;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}
+
+/* Base layer: Hanya outline */
+.outlineText {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5); /* Ketebalan dan warna outline */
+}
+
+/* Top layer: Fill warna utuh */
+.fillText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: #ffffff; /* Warna saat terisi penuh */
+  /* Kita biarkan clip-path diatur oleh Framer Motion di inline-style JSX */
+}
+
+.titleDivider {
+  width: 20rem;
+  height: 6px;
+  background: linear-gradient(90deg, #b300ff, #ffa67a);
+  border-radius: 999px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* --- SLIDER LOGOS --- */
 .sliderContainer {
   display: flex;
   width: max-content;
-  gap: 2rem;
+  gap: 1rem; 
 }
 
-/* ... (Class .logoCard, .logoIcon, dll biarkan sama) */
-/* Desain kartu untuk masing-masing logo ala Bento/Wix Studio */
+/* --- BLOCKY CARD DESIGN --- */
 .logoCard {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  padding: 1.25rem 2.5rem;
-  background-color: #18181b; /* zinc-900 */
-  border: 1px solid #27272a; /* zinc-800 */
-  border-radius: 1.5rem;
-  transition: all 0.3s ease;
+  gap: 1.25rem;
+  padding: 1.5rem 2.5rem;
+  background-color: rgba(24, 24, 27, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.9); 
+  border-radius: 16px; 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   min-width: max-content;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logoCard:hover {
-  background-color: #27272a;
-  transform: translateY(-5px);
-  border-color: #52525b;
+  background-color: #18181b; 
+  transform: translateY(-5px) scale(1.02);
+  border-color: #ffffff;
+  box-shadow: 0 15px 35px rgba(179, 0, 255, 0.3), 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
 .logoIcon {
   width: 45px;
   height: 45px;
   object-fit: contain;
+  transition: transform 0.3s ease;
 }
 
-/* Khusus Next.js & .NET agar terlihat jelas di background gelap */
+.logoCard:hover .logoIcon {
+  transform: rotate(5deg) scale(1.1);
+}
+
 .invertDark {
   filter: invert(1);
 }
 
 .logoName {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #e4e4e7;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
 }
 
-/* Responsif untuk Tablet (Layar di bawah 1024px) */
+/* --- RESPONSIVE TABLET --- */
 @media (max-width: 1024px) {
-  .techSection {
-    padding: 5rem 0;
-    gap: 2rem;
-  }
-
-  .logoCard {
-    padding: 1rem 2rem;
-  }
-
-  .logoIcon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .logoName {
-    font-size: 1.125rem;
-  }
+  .scrollTrack { margin-top: 14rem; }
+  .ambientGlow { top: -14rem; height: 32rem; filter: blur(70px); }
+  .techSection { padding: 6rem 0; gap: 1.25rem; }
+  
+  .techTitle { font-size: 4rem; }
+  
+  .logoCard { padding: 1.25rem 2rem; border-radius: 14px; }
+  .logoIcon { width: 40px; height: 40px; }
+  .logoName { font-size: 1.2rem; }
 }
 
-/* Responsif untuk Mobile (Layar di bawah 768px) */
+/* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
-  .techSection {
-    padding: 4rem 0;
-    gap: 1.5rem;
+  .scrollTrack { 
+    margin-top: 16rem; 
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+  
+  .ambientGlow { 
+    top: -12rem; 
+    height: 28rem; 
+    width: 100vw;
+    left: 0;
+    filter: blur(60px);
+    background: 
+      linear-gradient(90deg, transparent 0%, rgba(179, 0, 255, 0.35) 20%, rgba(255, 166, 122, 0.15) 50%, rgba(179, 0, 255, 0.35) 80%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, rgba(179, 0, 255, 0.25) 35%, rgba(255, 166, 122, 0.1) 50%, rgba(179, 0, 255, 0.25) 65%, transparent 100%);
+  }
+  
+  .techSection { 
+    padding: 5rem 0; 
+    gap: 1rem; 
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  
+  .techTitle { 
+    font-size: 3.5rem;
+    font-weight: 900; 
+    letter-spacing: 0; 
   }
 
-  .sliderContainer {
-    gap: 1rem; /* Jarak antar kartu dikurangi agar lebih padat */
+  .titleDivider {
+    width: 8rem;
+    height: 3px;
   }
 
-  .logoCard {
-    padding: 0.75rem 1.5rem;
-    gap: 0.75rem;
-    border-radius: 1rem;
+  /* Merapatkan jarak antar card */
+  .sliderContainer { 
+    gap: 0.5rem; 
+  }
+  
+  /* Mengecilkan dimensi card secara signifikan */
+  .logoCard { 
+    padding: 0.6rem 1rem; 
+    gap: 0.5rem; 
+    border-radius: 10px; 
+    border-width: 1px; /* Outline ditipiskan agar tidak menumpuk */
   }
 
-  .logoIcon {
-    width: 32px;
-    height: 32px;
+  /* Mengecilkan ikon */
+  .logoIcon { 
+    width: 24px; 
+    height: 24px; 
   }
-
-  .logoName {
-    font-size: 1rem;
+  
+  /* Mengecilkan teks nama logo */
+  .logoName { 
+    font-size: 0.85rem; 
+    font-weight: 700; 
   }
 }

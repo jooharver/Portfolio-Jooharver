@@ -1,26 +1,70 @@
 .contactSection {
   position: relative;
-  width: 100%;
-  padding: 8rem 2rem 10rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  overflow-x: clip; /* TAMBAHKAN INI */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 8rem 4vw 10rem 4vw; 
+  background-color: transparent;
+  overflow-x: clip; 
+  overflow-y: visible;
 }
 
-/* GANTI .header MENJADI INI */
 .headerWrapper {
   position: relative;
   text-align: center;
   margin-bottom: 6rem;
   padding: 4rem 0; 
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
 }
 
 .headerContent {
   position: relative;
   z-index: 10; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
 }
 
-/* TAMBAHKAN CLASS ASET MELAYANG */
+/* --- TITLE SCROLL FILL EFFECT --- */
+.titleContainer {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-family: 'Craze', sans-serif;
+  font-size: 11rem; 
+  letter-spacing: 8px; 
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}
+
+/* Layer Base: Outline Putih Tipis */
+.outlineText {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5); 
+}
+
+/* Layer Top: Fill Warna Putih */
+.fillText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: #ffffff; 
+}
+
+.subtitle {
+  color: #a1a1aa;
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 .floatingAsset {
   position: absolute;
   z-index: 1; 
@@ -47,27 +91,13 @@
   }
 }
 
-.title {
-  font-size: 4rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(to right, #ffffff, #a1a1aa);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-.subtitle {
-  color: #a1a1aa;
-  font-size: 1.25rem;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
 /* Layout ala Bento Box */
 .grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 1.5rem;
+  max-width: 1200px; 
+  margin: 0 auto;
 }
 
 .card {
@@ -181,30 +211,17 @@
   letter-spacing: 0.05em;
 }
 
-/* Responsif HP */
-@media (max-width: 768px) {
-  .grid { grid-template-columns: 1fr; }
-  .cardTitle { font-size: 2rem; }
-  .card { padding: 2rem; }
-}
-
 /* Responsif untuk Tablet (Layar di bawah 1024px) */
 @media (max-width: 1024px) {
-  .contactSection {
-    padding: 6rem 1.5rem 8rem 1.5rem;
-  }
-
-  .title {
-    font-size: 3rem;
-  }
-
+  .contactSection { padding: 6rem 3vw 8rem 3vw; }
+  .title { font-size: 7rem; letter-spacing: 6px; }
+  
   .subtitle {
     font-size: 1.125rem;
     padding: 0 1rem;
   }
 
   .grid {
-    /* Mengubah menjadi 1 kolom di tablet agar Bento Box tidak terlalu berdesakan */
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
@@ -220,38 +237,19 @@
 
 /* Responsif untuk Mobile (Layar di bawah 768px) */
 @media (max-width: 768px) {
-  .contactSection {
-    padding: 4rem 1rem 6rem 1rem;
-  }
-
-  .headerWrapper {
-    margin-bottom: 4rem;
-    padding: 2rem 0;
-  }
-
-  .title {
-    font-size: 2.5rem;
-  }
-
-  .subtitle {
-    font-size: 1rem;
-  }
+  .contactSection { padding: 4rem 1.25rem 6rem 1.25rem; }
+  .headerWrapper { margin-bottom: 4rem; padding: 2rem 0; }
+  .title { font-size: 3.5rem; letter-spacing: 4px; }
+  .subtitle { font-size: 1rem; }
 
   .card {
     padding: 1.75rem;
     border-radius: 1.5rem;
   }
 
-  .cardTitle {
-    font-size: 1.75rem;
-  }
+  .cardTitle { font-size: 1.75rem; }
+  .cardDesc { font-size: 1rem; margin-bottom: 2rem; }
 
-  .cardDesc {
-    font-size: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  /* Tombol membentang penuh di HP agar mudah di-tap */
   .neonButton {
     width: 100%;
     justify-content: center;
@@ -259,21 +257,10 @@
     font-size: 1rem;
   }
 
-  .socialList {
-    gap: 1.25rem;
-  }
-
-  .iconBox {
-    width: 48px;
-    height: 48px;
-    border-radius: 0.75rem;
-  }
-
-  .socialItem {
-    font-size: 1rem;
-    gap: 1rem;
-  }
-
+  .socialList { gap: 1.25rem; }
+  .iconBox { width: 48px; height: 48px; border-radius: 0.75rem; }
+  .socialItem { font-size: 1rem; gap: 1rem; }
+  
   .locationBadge {
     padding-top: 2.5rem;
     font-size: 0.75rem;

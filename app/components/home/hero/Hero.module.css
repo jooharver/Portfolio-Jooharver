@@ -7,17 +7,17 @@
   text-align: center;
   margin-top: 2rem;
   width: 100%;
-  overflow-x: clip; /* Memotong teks raksasa yang lewat batas layar tanpa merusak sticky section lain */
+  overflow-x: clip; 
 }
 
-/* Teks Raksasa */
 .title {
-  font-size: 15vw;
-  margin-left: 2rem;
-  font-weight: 900;
+  font-family: 'Craze', sans-serif;
+  font-size: 16vw; 
+  font-weight: 400; 
+  letter-spacing: 12px; 
   margin-bottom: 0;
+  margin-top: 1rem;
   line-height: 1;
-  letter-spacing: -0.05em;
   background: linear-gradient(to bottom right, #ffffff, #52525b);
   -webkit-background-clip: text;
   color: transparent;
@@ -26,45 +26,59 @@
   white-space: nowrap;
 }
 
-/* Pembagian Layout: Kiri, Tengah, Kanan */
 .middleRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
-  /* Lebar disesuaikan agar persis memeluk lebar font 15vw */
-  width: 80vw; 
+  width: 85vw; 
   padding: 0; 
-  
-  /* Menurunkan Avatar menjauhi teks */
   margin-top: -6vw; 
-  
   position: relative;
   z-index: 10; 
 }
 
-/* Sisi Kiri: Deskripsi */
 .leftContent {
   flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.infoBlock {
+  background: rgba(24, 24, 27, 0.6); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.75rem 2rem;
+  border-radius: 24px; 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  max-width: 24rem;
   text-align: left;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .role {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #e4e4e7;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.divider {
+  width: 3rem;
+  height: 4px;
+  background: linear-gradient(90deg, #b300ff, #ffa67a);
+  border-radius: 4px;
+  margin-bottom: 1rem;
 }
 
 .description {
   color: #a1a1aa;
-  max-width: 20rem;
-  font-size: 1.125rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.6;
   margin: 0;
+  font-weight: 500;
 }
 
-/* Sisi Tengah: Avatar & Bayangan */
 .centerContent {
   flex: 1;
   display: flex;
@@ -76,23 +90,19 @@
 }
 
 .imageFloating {
-  filter: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.7));
+  filter: drop-shadow(0 30px 30px rgba(0, 0, 0, 0.8));
 }
 
-/* Efek 2 Layer Avatar & X-Ray Masking */
 .avatarContainer {
   position: relative;
-  width: 380px; 
+  width: 350px; 
   cursor: crosshair;
-  /* Nilai default masking jauh di luar layar */
   --x: -9999px; 
   --y: -9999px;
 }
 
 @media (min-width: 1024px) {
-  .avatarContainer { 
-    width: 450px; 
-  }
+  .avatarContainer { width: 450px; }
 }
 
 .imageBase, .imageOverlay {
@@ -101,53 +111,29 @@
   object-fit: contain;
 }
 
-/* Layer Manusia (Bawah) - Area kursor transparan, sisanya hitam solid */
 .imageBase {
-  -webkit-mask-image: radial-gradient(
-    circle 110px at var(--x) var(--y), 
-    transparent 0%, 
-    transparent 70%, 
-    black 100%
-  );
-  mask-image: radial-gradient(
-    circle 110px at var(--x) var(--y), 
-    transparent 0%, 
-    transparent 70%, 
-    black 100%
-  );
+  -webkit-mask-image: radial-gradient(circle 110px at var(--x) var(--y), transparent 0%, transparent 70%, black 100%);
+  mask-image: radial-gradient(circle 110px at var(--x) var(--y), transparent 0%, transparent 70%, black 100%);
 }
 
-/* Layer Robot (Atas) - Area kursor hitam solid (terlihat), sisanya transparan */
 .imageOverlay {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
-  
-  -webkit-mask-image: radial-gradient(
-    circle 110px at var(--x) var(--y), 
-    black 0%, 
-    black 70%, 
-    transparent 100%
-  );
-  mask-image: radial-gradient(
-    circle 110px at var(--x) var(--y), 
-    black 0%, 
-    black 70%, 
-    transparent 100%
-  );
+  -webkit-mask-image: radial-gradient(circle 110px at var(--x) var(--y), black 0%, black 70%, transparent 100%);
+  mask-image: radial-gradient(circle 110px at var(--x) var(--y), black 0%, black 70%, transparent 100%);
 }
 
 .shadow {
-  width: 12rem;
+  width: 14rem;
   height: 2rem;
   background-color: black;
   border-radius: 100%;
   filter: blur(25px);
-  margin-top: -3rem;
+  margin-top: -3.5rem;
 }
 
-/* Sisi Kanan: Tombol */
 .rightContent {
   flex: 1;
   display: flex;
@@ -155,52 +141,73 @@
 }
 
 .ctaButton {
-  padding: 1.25rem 3rem;
-  background: linear-gradient(90deg, #180029 0%, #b300ff 50%, #ffa67a 100%);
-  color: white;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: linear-gradient(135deg, rgba(24, 0, 41, 0.8), rgba(179, 0, 255, 0.2));
+  border: 1px solid rgba(179, 0, 255, 0.4);
+  padding: 1rem 1.5rem;
+  border-radius: 24px; 
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   cursor: pointer;
-  box-shadow: 0 0 25px rgba(179, 0, 255, 0.4);
-  transition: all 0.3s ease;
-  letter-spacing: 1px;
 }
 
 .ctaButton:hover {
-  transform: scale(1.05) rotate(-3deg);
-  box-shadow: 0 0 40px rgba(255, 166, 122, 0.6);
+  transform: translateY(-8px);
+  background: linear-gradient(135deg, rgba(24, 0, 41, 0.9), rgba(179, 0, 255, 0.4));
+  border-color: #ffa67a;
+  box-shadow: 0 25px 40px rgba(179, 0, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-/* Responsif untuk Layar HP */
-@media (max-width: 768px) {
-  .middleRow {
-    flex-direction: column;
-    width: 90vw;
-    margin-top: -2rem;
-  }
-  .leftContent {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  .description {
-    margin: 0 auto;
-  }
-  .rightContent {
-    justify-content: center;
-    margin-top: 2rem;
-  }
-  .avatarContainer {
-    width: 300px;
-  }
+.ctaIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: #b300ff;
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 0 20px rgba(179, 0, 255, 0.6);
+  transition: transform 0.3s ease;
 }
 
-/* Efek Kursor Berkedip */
+.ctaButton:hover .ctaIconWrapper {
+  transform: scale(1.1) rotate(5deg);
+  background: #ffa67a;
+  box-shadow: 0 0 25px rgba(255, 166, 122, 0.6);
+}
+
+.ctaTextWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.ctaLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #a1a1aa;
+  margin-bottom: 0.25rem;
+}
+
+.ctaTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
 .cursor {
   display: inline-block;
   color: #ffffff;
-  -webkit-text-fill-color: #ffffff; /* Memaksa agar kursor tidak ikut transparan kena efek gradient teks */
+  -webkit-text-fill-color: #ffffff; 
   font-weight: 400;
   animation: blink 1s step-end infinite;
   margin-left: 1vw;
@@ -211,93 +218,86 @@
   50% { opacity: 0; }
 }
 
-/* Responsif untuk Tablet (Layar di bawah 1024px) */
 @media (max-width: 1024px) {
   .middleRow {
     flex-direction: column;
     width: 90vw;
     margin-top: 2rem;
-    gap: 3rem; /* Memberi jarak antar elemen saat ditumpuk vertikal */
+    gap: 3rem; 
   }
-
   .leftContent {
+    justify-content: center;
+    order: 2; 
+  }
+  .infoBlock {
     text-align: center;
-    order: 2; /* Memindahkan teks ke bawah avatar */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-
-  .description {
-    margin: 0 auto;
-    max-width: 28rem;
-  }
-
   .centerContent {
-    order: 1; /* Memastikan avatar selalu di atas saat ditumpuk */
+    order: 1; 
   }
-
-  .avatarContainer {
-    width: 320px;
-  }
-
+  .avatarContainer { width: 320px; }
   .rightContent {
     justify-content: center;
-    order: 3; /* Memindahkan tombol ke paling bawah */
+    order: 3; 
   }
 }
 
-/* Responsif untuk Mobile (Layar di bawah 768px) */
 @media (max-width: 768px) {
-  .heroSection {
-    margin-top: 4rem;
+  .heroSection { 
+    margin-top: 0; 
+    padding-top: 2rem; 
+    overflow-x: visible; 
   }
-
-  .title {
-    font-size: 18vw; /* Sedikit dibesarkan agar proporsional di HP */
-    margin-left: 0; /* Menghapus margin kiri agar presisi di tengah */
-  }
-
-  .middleRow {
-    gap: 2rem;
+  
+.title {
+    font-family: 'Craze', sans-serif;
+    font-size: 16vw; /* Ukuran dibesarkan sedikit karena lebar layar HP sempit */
+    letter-spacing: 0; /* Spasi dikurangi agar teks tidak jebol ke samping */
     margin-top: 1rem;
+    font-weight: bold; /* Lebih ringan agar lebih mudah dibaca di layar kecil */
+  }
+  
+  .middleRow { 
+    gap: 1.5rem; 
+    margin-top: -1.5rem; 
+    width: 100vw; 
+    padding: 0 1.25rem; 
+    z-index: 10; 
   }
 
-  .role {
-    font-size: 1.5rem;
+  .infoBlock { 
+    padding: 1.25rem; 
+    width: 100%; 
+    max-width: 100%; 
+    border-radius: 20px;
   }
+  
+  .role { font-size: 1.35rem; margin-bottom: 0.5rem; }
+  .description { font-size: 0.95rem; }
+  .divider { display: none; }
 
-  .description {
-    font-size: 1rem;
-    padding: 0 1rem;
+  .avatarContainer { 
+    margin-top: 1rem;
+    width: 250px; 
   }
-
-  .avatarContainer {
-    width: 250px; /* Mengecilkan avatar agar tidak mentok tepi layar HP */
+  
+  .shadow { 
+    width: 10rem; 
+    height: 1.5rem; 
+    margin-top: -3rem; 
   }
-
-  .shadow {
-    width: 9rem;
-    height: 1.5rem;
-    margin-top: -2rem;
-    filter: blur(15px);
-  }
-
+  
   .ctaButton {
-    margin-top: -2rem;
-    padding: 1rem 2rem;
-    font-size: 1.125rem;
+    width: 100%;
+    margin-top: -0.75rem;
+    justify-content: center;
+    border-radius: 20px;
+    padding: 1rem 1.25rem;
   }
-}
-
-/* Efek Kursor Berkedip (Tetap dipertahankan di bagian bawah) */
-.cursor {
-  display: inline-block;
-  color: #ffffff;
-  -webkit-text-fill-color: #ffffff;
-  font-weight: 400;
-  animation: blink 1s step-end infinite;
-  margin-left: 1vw;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  
+  .ctaIconWrapper { width: 3rem; height: 3rem; border-radius: 12px; }
+  .ctaTitle { font-size: 1.25rem; }
 }

@@ -1,27 +1,62 @@
 .aboutSection {
   position: relative;
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto; /* Kunci utama agar section berada tepat di tengah layar */
   padding: 8rem 2rem;
   background-color: transparent;
-  max-width: 1200px;
-  margin: 0 auto;
-  overflow-x: clip; /* TAMBAHKAN INI */
 }
 
-/* GANTI .header MENJADI INI */
 .headerWrapper {
   position: relative;
   text-align: center;
   margin-bottom: 6rem;
   padding: 4rem 0; 
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Memastikan seluruh isi header terpusat */
 }
 
 .headerContent {
   position: relative;
   z-index: 10; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Memastikan teks ABOUT ME tidak lari ke kiri */
 }
 
-/* TAMBAHKAN CLASS ASET MELAYANG */
+/* --- TITLE SCROLL FILL EFFECT --- */
+.titleContainer {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-family: 'Craze', sans-serif;
+  font-size: 11rem; 
+  letter-spacing: 8px; 
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}
+
+/* Layer Base: Outline Putih Tipis */
+.outlineText {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5); 
+}
+
+/* Layer Top: Fill Warna Putih */
+.fillText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: #ffffff; 
+}
+
 .floatingAsset {
   position: absolute;
   z-index: 1; 
@@ -48,19 +83,10 @@
   }
 }
 
-.title {
-  font-size: 4rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(to right, #ffffff, #a1a1aa);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
 .timelineContainer {
   position: relative;
   width: 100%;
-  max-width: 1200px; /* Diperlebar dari 1000px menjadi 1200px */
+  max-width: 1200px; 
   margin: 0 auto;
   min-height: 800px; 
   display: flex;
@@ -91,6 +117,8 @@
   z-index: 10;
   display: flex;
   width: 100%;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .leftAlign {
@@ -103,7 +131,7 @@
 
 /* Desain Kartu (Dark Clean) */
 .card {
-  width: 40%; /* Dikecilkan dari 45% agar jarak tengah semakin lebar */
+  width: 40%; 
   background-color: #09090b;
   border: 1.5px solid rgba(255, 255, 255, 0.3);
   border-radius: 1.5rem;
@@ -139,5 +167,5 @@
 @media (max-width: 768px) {
   .card { width: 100%; }
   .timelineContainer { gap: 4rem; min-height: auto; }
-  .svgWrapper { display: none; } /* Garis disembunyikan di HP agar lebih rapi */
+  .svgWrapper { display: none; } 
 }

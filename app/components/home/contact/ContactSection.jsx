@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import styles from "./ContactSection.module.css";
 
 const floatingImages = [
@@ -14,10 +15,23 @@ const floatingImages = [
 ];
 
 export default function ContactSection() {
+  const headerRef = useRef(null);
+
+  const { scrollYProgress: headerScrollProgress } = useScroll({
+    target: headerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const titleClipPath = useTransform(
+    headerScrollProgress,
+    [0.2, 0.6],
+    ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]
+  );
+
   return (
     <section className={styles.contactSection}>
       
-      <div className={styles.headerWrapper}>
+      <div className={styles.headerWrapper} ref={headerRef}>
         {floatingImages.map((img) => (
           <motion.div
             key={img.id}
@@ -33,18 +47,20 @@ export default function ContactSection() {
           </motion.div>
         ))}
 
-        <motion.div 
-          className={styles.headerContent}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <h2 className={styles.title}>LET&apos;S CONNECT</h2>
+        <div className={styles.headerContent}>
+          <div className={styles.titleContainer}>
+            <h2 className={`${styles.title} ${styles.outlineText}`}>LET&apos;S CONNECT</h2>
+            <motion.h2 
+              className={`${styles.title} ${styles.fillText}`}
+              style={{ clipPath: titleClipPath }}
+            >
+              LET&apos;S CONNECT
+            </motion.h2>
+          </div>
           <p className={styles.subtitle}>
             Punya ide proyek, tawaran kolaborasi, atau sekadar ingin menyapa? Jangan ragu untuk menghubungi saya.
           </p>
-        </motion.div>
+        </div>
       </div>
 
       <div className={styles.grid}>

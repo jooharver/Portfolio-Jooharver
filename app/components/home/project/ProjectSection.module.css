@@ -1,33 +1,60 @@
 .projectSection {
-  position: relative;
-  width: 100%;
-  padding: 8rem 2rem;
+  position: sticky;
+  bottom: 0; /* KUNCI PARALLAX: Mengunci section ini saat mentok di bawah */
+  z-index: 10; 
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  /* HAPUS margin negatif. Padding bawah dinolkan karena padding dialihkan ke cardsContainer */
+  padding: 8rem 4vw 0 4vw; 
   background-color: transparent;
-  max-width: 1200px;
-  margin: 0 auto;
-  overflow-x: clip; /* TAMBAHKAN INI */
+  overflow-x: clip; 
+  overflow-y: visible; 
 }
 
-/* AREA HEADER & ASET MELAYANG (TETAP SAMA) */
+/* AREA HEADER & ASET MELAYANG */
 .headerWrapper {
   position: relative;
   text-align: center;
   margin-bottom: 8rem;
   padding: 4rem 0; 
+  width: 100%;
 }
 
 .headerContent {
   position: relative;
   z-index: 10; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --- TITLE SCROLL FILL EFFECT --- */
+.titleContainer {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
 }
 
 .title {
-  font-size: 4rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(to right, #ffffff, #a1a1aa);
-  -webkit-background-clip: text;
+  font-family: 'Craze', sans-serif;
+  font-size: 11rem; 
+  letter-spacing: 8px; 
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.outlineText {
   color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5); 
+}
+
+.fillText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: #ffffff; 
 }
 
 .description {
@@ -49,51 +76,55 @@
   height: auto;
 }
 
-.asset1 { top: -20%; left: 10%; width: 140px; }
-.asset2 { top: 0%; right: 5%; width: 110px; }
-.asset3 { top: 50%; left: 0%; width: 130px; }
-.asset4 { top: 60%; right: 8%; width: 150px; }
-.asset5 { bottom: -30%; left: 15%; width: 120px; }
-.asset6 { bottom: -20%; right: 20%; width: 130px; }
+.asset1 { top: -10%; left: 0%; width: 140px; } 
+.asset2 { top: -5%; right: 2%; width: 120px; } 
+.asset3 { top: 70%; left: 5%; width: 100px; } 
+.asset4 { top: 40%; right: 5%; width: 180px; } 
+.asset5 { top: 65%; right: 15%; width: 90px; } 
+.asset6 { display: none; } 
 
 @media (max-width: 768px) {
-  .asset1, .asset2, .asset3, .asset4, .asset5, .asset6 {
-    width: 60px;
-    opacity: 0.5;
-  }
+  .asset1, .asset2, .asset3, .asset4, .asset5 { width: 60px; opacity: 0.5; }
+  .asset4 { top: 50%; right: -5%; } 
 }
 
-/* AREA TUMPUKAN KARTU (DARK CLEAN MODE) */
+/* --- AREA TUMPUKAN KARTU --- */
 .cardsContainer {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10rem; 
-  padding-bottom: 15rem;
+  /* Jarak gulir antar kartu */
+  gap: 15rem; 
+  /* KUNCI PENTING: Jalur sisa agar Kartu 1-4 tidak terdorong keluar 
+     dan memberi waktu Kartu 5 berhenti sebelum AboutSection naik */
+  padding-bottom: 25vh; 
+  max-width: 1200px; 
+  margin: 0 auto;
 }
 
+/* KUNCI STACKING BERJENJANG */
 .cardStickyWrapper {
   position: sticky;
-  /* KUNCI FIX: Naikkan dari 75vh menjadi 85vh atau 90vh agar kartu jauh lebih tinggi */
-  height: 88vh; 
+  /* Top-nya diatur dinamis via JSX */
+  
+  height: 75vh; 
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-/* Kartu gelap dengan outline putih */
 .cardInner {
   width: 100%;
   height: 100%;
   border-radius: 1.5rem;
   background-color: #09090b; 
-  border: 1.5px solid rgba(255, 255, 255, 0.4); /* Outline putih transparan */
+  border: 1.5px solid rgba(255, 255, 255, 0.4); 
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 -8px 25px rgba(0,0,0,0.5); 
 }
 
-/* Layout Header baru ala referensi */
 .cardHeader {
   display: flex;
   align-items: center;
@@ -107,7 +138,6 @@
   gap: 1.5rem;
 }
 
-/* Tipografi Angka Raksasa */
 .cardNumber {
   font-size: 3.5rem;
   font-weight: 900;
@@ -136,7 +166,6 @@
   color: #e4e4e7;
 }
 
-/* Tombol Outline Clean */
 .tryButton {
   padding: 0.75rem 2rem;
   background-color: transparent;
@@ -158,135 +187,66 @@
 
 .cardBody {
   flex: 1;
-  /* KUNCI FIX: Kurangi sedikit padding agar ruang untuk gambar menjadi lebih luas (sebelumnya 3rem) */
-  padding: 0 2rem 2rem 2rem; 
+  padding: 0 3rem 3rem 3rem; 
   display: flex;
   align-items: center; 
   justify-content: center;
   min-height: 0; 
-  overflow: hidden; 
+  width: 100%;
 }
 
-/* Responsif untuk Tablet (Layar di bawah 1024px) */
+.mockupWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative !important; 
+  border-radius: 1.5rem !important; 
+  overflow: hidden !important; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-mask-image: -webkit-radial-gradient(white, black); 
+}
+
+.mockupWrapper > * {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+  object-fit: cover !important; 
+}
+
+/* Responsif untuk Tablet */
 @media (max-width: 1024px) {
-  .projectSection {
-    padding: 6rem 1.5rem;
-  }
-
-  .title {
-    font-size: 3rem;
-  }
-
-  .description {
-    font-size: 1.125rem;
-  }
-
-  .headerWrapper {
-    margin-bottom: 6rem;
-  }
-
-  .cardsContainer {
-    gap: 6rem; 
-    padding-bottom: 10rem;
-  }
-
-  .cardStickyWrapper {
-    height: 60vh; /* Sedikit dipendekkan agar tidak terlalu memakan tinggi layar tablet */
-  }
-
-  .cardHeader {
-    padding: 2rem 2rem 1rem 2rem;
-  }
-
-  .cardNumber {
-    font-size: 2.5rem;
-  }
-
-  .cardBody {
-    padding: 0 2rem 2rem 2rem;
-  }
+  .projectSection { padding: 6rem 3vw 0 3vw; }
+  .title { font-size: 7rem; letter-spacing: 6px; }
+  .headerWrapper { margin-bottom: 6rem; }
+  .cardsContainer { gap: 10rem; padding-bottom: 25vh; }
+  .cardStickyWrapper { height: 70vh; }
+  .cardHeader { padding: 2rem 2rem 1rem 2rem; }
+  .cardNumber { font-size: 2.5rem; }
+  
+  .cardBody { padding: 0 2rem 2rem 2rem; }
+  .mockupWrapper { border-radius: 1.25rem !important; }
 }
 
-/* Responsif untuk Mobile (Layar di bawah 768px) */
+/* Responsif untuk Mobile */
 @media (max-width: 768px) {
-  .projectSection {
-    padding: 4rem 1rem;
-  }
-
-  .title {
-    font-size: 2.5rem;
-  }
-
-  .description {
-    font-size: 1rem;
-  }
-
-  .headerWrapper {
-    margin-bottom: 4rem;
-    padding: 2rem 0;
-  }
-
-  .cardsContainer {
-    gap: 4rem; 
-    padding-bottom: 6rem;
-  }
-
-.cardStickyWrapper {
-    height: 80vh; /* Beri ruang sedikit lebih tinggi di HP */
-  }
-
-  .cardInner {
-    height: 100%; 
-    border-radius: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Mengunci paksa apapun yang melebihi batas */
-  }
-
-  .cardBody {
-    flex: 1;
-    min-height: 0; /* WAJIB: Mencegah flexbox melar ke bawah */
-    padding: 0 1.25rem 1.5rem 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* KUNCI FIX: Memaksa semua mockup/SVG di dalam kartu menyusut mengikuti sisa ruang */
-  .cardBody > * {
-    max-height: 100% !important;
-    max-width: 100% !important;
-    object-fit: contain;
-  }
-  /* Mengubah layout header kartu menjadi vertikal di HP */
-  .cardHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.25rem;
-    padding: 1.5rem;
-  }
-
-  .headerInfo {
-    gap: 1rem;
-  }
-
-  .cardNumber {
-    font-size: 2rem;
-  }
-
-  .cardLabel {
-    font-size: 0.65rem;
-  }
-
-  .cardTitle {
-    font-size: 1rem;
-  }
-
-  /* Tombol membentang penuh di HP agar mudah diklik */
-  .tryButton {
-    width: 100%;
-    text-align: center;
-    padding: 0.75rem 1rem;
-  }
-
+  .projectSection { padding: 4rem 1.25rem 0 1.25rem; }
+  .title { font-size: 3.5rem; letter-spacing: 4px; }
+  .headerWrapper { margin-bottom: 4rem; padding: 2rem 0; }
+  
+  .cardsContainer { gap: 8rem; padding-bottom: 25vh; }
+  .cardStickyWrapper { height: 65vh; }
+  
+  .cardInner { height: 100%; border-radius: 1.25rem; }
+  
+  .cardBody { padding: 0 1.25rem 1.5rem 1.25rem; }
+  .mockupWrapper { border-radius: 1rem !important; }
+  .mockupWrapper > * { object-fit: cover !important; }
+  
+  .cardHeader { flex-direction: column; align-items: flex-start; gap: 1.25rem; padding: 1.5rem; }
+  .cardNumber { font-size: 2rem; }
+  .cardLabel { font-size: 0.65rem; }
+  .cardTitle { font-size: 1rem; }
+  .tryButton { width: 100%; text-align: center; padding: 0.75rem 1rem; }
 }

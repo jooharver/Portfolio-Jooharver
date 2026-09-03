@@ -10,14 +10,14 @@ import InventoryCard from "./inventory/InventoryCard";
 import AttendanceCard from "./attendance/AttendanceCard";
 import RentalCard from "./rental/RentalCard";
 import ErpCard from "./erp/ErpCard";
-import MarketplaceCard from "./marketplace/MarketplaceCard"; // <-- Ganti CarbonCard jadi MarketplaceCard
+import MarketplaceCard from "./marketplace/MarketplaceCard"; 
 
 // Import Live Demo Project
 import InventoryApp from "./inventory/InventoryApp";
 import AttendanceApp from "./attendance/AttendanceApp";
 import RentalApp from "./rental/RentalApp";
 import ErpApp from "./erp/ErpApp"; 
-import MarketplaceApp from "./marketplace/MarketplaceApp"; // <-- Import Marketplace App
+import MarketplaceApp from "./marketplace/MarketplaceApp"; 
 
 // Struktur data
 const projects = [
@@ -25,7 +25,7 @@ const projects = [
   { id: "02", label: "PROJECT", title: "Mobile Attendance", Component: AttendanceCard },
   { id: "03", label: "PROJECT", title: "Field Rental & Payment", Component: RentalCard },
   { id: "04", label: "PROJECT", title: "ERP Dashboard", Component: ErpCard },
-  { id: "05", label: "PROJECT", title: "Fashion Marketplace", Component: MarketplaceCard }, // <-- Ubah Title
+  { id: "05", label: "PROJECT", title: "Fashion Marketplace", Component: MarketplaceCard },
 ];
 
 // Data Aset Gambar Melayang
@@ -39,46 +39,33 @@ const floatingImages = [
 ];
 
 export default function ProjectSection() {
-  const containerRef = useRef(null);
-  
   const [activeProject, setActiveProject] = useState(null);
   
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
+  const headerRef = useRef(null);
+  const { scrollYProgress: headerScrollProgress } = useScroll({
+    target: headerRef,
+    offset: ["start end", "end start"]
   });
+
+  const titleClipPath = useTransform(
+    headerScrollProgress,
+    [0.2, 0.6],
+    ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]
+  );
 
   return (
     <>
-      {/* 1. RENDER LIVE PROJECT DI LAPISAN PALING ATAS (OVERLAY) */}
       <AnimatePresence>
-        {activeProject === "01" && (
-          <InventoryApp onClose={() => setActiveProject(null)} />
-        )}
-        
-        {activeProject === "02" && (
-          <AttendanceApp onClose={() => setActiveProject(null)} />
-        )}
-
-        {activeProject === "03" && (
-          <RentalApp onClose={() => setActiveProject(null)} />
-        )}
-        
-        {activeProject === "04" && (
-          <ErpApp onClose={() => setActiveProject(null)} />
-        )}
-
-        {/* BLOK RENDER MARKETPLACE APP */}
-        {activeProject === "05" && (
-          <MarketplaceApp onClose={() => setActiveProject(null)} />
-        )}
+        {activeProject === "01" && <InventoryApp onClose={() => setActiveProject(null)} />}
+        {activeProject === "02" && <AttendanceApp onClose={() => setActiveProject(null)} />}
+        {activeProject === "03" && <RentalApp onClose={() => setActiveProject(null)} />}
+        {activeProject === "04" && <ErpApp onClose={() => setActiveProject(null)} />}
+        {activeProject === "05" && <MarketplaceApp onClose={() => setActiveProject(null)} />}
       </AnimatePresence>
 
-      {/* 2. SECTION UTAMA PORTFOLIO */}
-      <section className={styles.projectSection} ref={containerRef}>
+      <section className={styles.projectSection}>
         
-        {/* HEADER & FLOATING ASSETS */}
-        <div className={styles.headerWrapper}>
+        <div className={styles.headerWrapper} ref={headerRef}>
           {floatingImages.map((img) => (
             <motion.div
               key={img.id}
@@ -92,42 +79,42 @@ export default function ProjectSection() {
                 animate={{ y: [0, -15, 0], rotate: [img.rotate, img.rotate + 5, img.rotate] }}
                 transition={{ repeat: Infinity, duration: 4 + img.delay, ease: "easeInOut" }}
               >
-                <Image 
-                  src={img.src} 
-                  alt={`Floating Asset ${img.id}`} 
-                  width={200} 
-                  height={200} 
-                  className={styles.img} 
-                  unoptimized
-                />
+                <Image src={img.src} alt={`Asset`} width={200} height={200} className={styles.img} unoptimized />
               </motion.div>
             </motion.div>
           ))}
 
           <div className={styles.headerContent}>
-            <h2 className={styles.title}>MY PROJECTS</h2>
+            <div className={styles.titleContainer}>
+              <h2 className={`${styles.title} ${styles.outlineText}`}>MY PROJECTS</h2>
+              <motion.h2 
+                className={`${styles.title} ${styles.fillText}`}
+                style={{ clipPath: titleClipPath }}
+              >
+                MY PROJECTS
+              </motion.h2>
+            </div>
+            
             <p className={styles.description}>
               Kumpulan proyek yang telah saya kerjakan. Klik Live Project untuk mencoba demo langsung.
             </p>
           </div>
         </div>
 
-        {/* TUMPUKAN KARTU PROJECT */}
         <div className={styles.cardsContainer}>
           {projects.map((project, index) => {
-            const rangeStart = index / projects.length;
-            const rangeEnd = 1;
-            const targetScale = 1 - ((projects.length - index) * 0.05);
-            
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            const scale = useTransform(scrollYProgress, [rangeStart, rangeEnd], [1, targetScale]);
-            const stickyTop = `calc(10vh + ${index * 30}px)`;
+            const stickyTop = `calc(10vh + ${index * 24}px)`;
 
             return (
-              <div key={project.id} className={styles.cardStickyWrapper} style={{ top: stickyTop, zIndex: index + 1 }}>
-                <motion.div className={styles.cardInner} style={{ scale, transformOrigin: "top center" }}>
-                  
-                  {/* HEADER KARTU */}
+              <div 
+                key={project.id} 
+                className={styles.cardStickyWrapper} 
+                style={{ 
+                  top: stickyTop, 
+                  zIndex: index + 1 
+                }}
+              >
+                <div className={styles.cardInner}>
                   <div className={styles.cardHeader}>
                     <div className={styles.headerInfo}>
                       <span className={styles.cardNumber}>{project.id}</span>
@@ -136,27 +123,20 @@ export default function ProjectSection() {
                         <span className={styles.cardTitle}>{project.title}</span>
                       </div>
                     </div>
-                    
-                    {/* TOMBOL LIVE PROJECT */}
-                    <button 
-                      className={styles.tryButton}
-                      onClick={() => setActiveProject(project.id)}
-                    >
+                    <button className={styles.tryButton} onClick={() => setActiveProject(project.id)}>
                       LIVE PROJECT
                     </button>
                   </div>
-                  
-                  {/* ISI MOCKUP KARTU */}
                   <div className={styles.cardBody}>
-                    <project.Component onClick={() => setActiveProject(project.id)} />
+                    <div className={styles.mockupWrapper}>
+                      <project.Component onClick={() => setActiveProject(project.id)} />
+                    </div>
                   </div>
-                  
-                </motion.div>
+                </div>
               </div>
             );
           })}
         </div>
-        
       </section>
     </>
   );

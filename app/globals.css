@@ -53,5 +53,33 @@ body {
   [role="button"] * {
     cursor: inherit !important;
   }
+
+  @font-face {
+  font-family: 'Craze';
+  src: url('/fonts/craze.ttf') format('truetype'); /* Sesuaikan nama file .ttf atau .otf */
+  font-weight: normal;
+  font-style: normal;
+  }
+
+    @font-face {
+  font-family: 'Alpenkreuzer';
+  src: url('/fonts/alpenkreuzer.ttf') format('truetype'); /* Sesuaikan nama file .ttf atau .otf */
+  font-weight: normal;
+  font-style: normal;
+  }
+
+      @font-face {
+  font-family: 'Boldstorm';
+  src: url('/fonts/boldstorm.otf') format('truetype'); /* Sesuaikan nama file .ttf atau .otf */
+  font-weight: normal;
+  font-style: normal;
+  }
+
+        @font-face {
+  font-family: 'Chunky';
+  src: url('/fonts/chunky.ttf') format('truetype'); /* Sesuaikan nama file .ttf atau .otf */
+  font-weight: normal;
+  font-style: normal;
+  }
   
 }

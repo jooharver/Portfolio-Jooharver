@@ -31,17 +31,24 @@ const row2 = [
 export default function TechStack() {
   const containerRef = useRef(null);
 
-  // Tracker memantau scrollTrack yang tinggi (200vh)
+  // Memantau scroll pada container utama
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
   });
 
-// Jarak pergerakan diperkecil (-10%) agar terasa lambat meski section-nya pendek
+  // Slider Logo
   const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
   const x2 = useTransform(scrollYProgress, [0, 1], ["-10%", "0%"]);
 
-  // Fungsi pembantu agar array di-duplicate (memberi ilusi infinite scroll panjang)
+  // Efek Fill Text: mengubah clip-path berdasarkan scroll
+  // Saat elemen mulai terlihat (0.2), fill 0%. Saat hampir di tengah (0.5), fill 100%.
+  const clipPathValue = useTransform(
+    scrollYProgress,
+    [0.2, 0.5],
+    ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]
+  );
+
   const renderLogos = (items) => {
     return [...items, ...items, ...items].map((item, index) => (
       <div key={index} className={styles.logoCard}>
@@ -60,8 +67,30 @@ export default function TechStack() {
 
   return (
     <div ref={containerRef} className={styles.scrollTrack}>
+      <div className={styles.ambientGlow}></div>
+      
       <section className={styles.techSection}>
         
+        {/* JUDUL TECHSTACK DENGAN EFEK FILL */}
+        <div className={styles.titleContainer}>
+          
+          {/* Layer 1: Outline Putih (Selalu terlihat) */}
+          <h2 className={`${styles.techTitle} ${styles.outlineText}`}>
+            TECHSTACK
+          </h2>
+          
+          {/* Layer 2: Fill Putih (Dipotong oleh clip-path Framer Motion) */}
+          <motion.h2 
+            className={`${styles.techTitle} ${styles.fillText}`}
+            style={{ clipPath: clipPathValue }}
+          >
+            TECHSTACK
+          </motion.h2>
+
+          {/* Garis bawah dekoratif */}
+          <div className={styles.titleDivider}></div>
+        </div>
+
         <motion.div style={{ x: x1 }} className={styles.sliderContainer}>
           {renderLogos(row1)}
         </motion.div>

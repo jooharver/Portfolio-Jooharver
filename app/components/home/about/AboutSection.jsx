@@ -22,6 +22,19 @@ export default function AboutSection() {
     offset: ["start center", "end center"], 
   });
 
+  // ANIMASI SCROLL UNTUK JUDUL
+  const headerRef = useRef(null);
+  const { scrollYProgress: headerScrollProgress } = useScroll({
+    target: headerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const titleClipPath = useTransform(
+    headerScrollProgress,
+    [0.2, 0.6],
+    ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]
+  );
+
   // 1. KONTROL GARIS DINAMIS
   const lineLength = useTransform(scrollYProgress, [0.1, 0.35, 0.5, 0.75], [0, 0.5, 0.5, 1]);
   const lineOpacity = useTransform(scrollYProgress, [0, 0.09, 0.1], [0, 0, 1]);
@@ -49,7 +62,7 @@ export default function AboutSection() {
   return (
     <section className={styles.aboutSection}>
       
-      <div className={styles.headerWrapper}>
+      <div className={styles.headerWrapper} ref={headerRef}>
         {floatingImages.map((img) => (
           <motion.div
             key={img.id}
@@ -66,7 +79,15 @@ export default function AboutSection() {
         ))}
 
         <div className={styles.headerContent}>
-          <h2 className={styles.title}>ABOUT ME</h2>
+          <div className={styles.titleContainer}>
+            <h2 className={`${styles.title} ${styles.outlineText}`}>ABOUT ME</h2>
+            <motion.h2 
+              className={`${styles.title} ${styles.fillText}`}
+              style={{ clipPath: titleClipPath }}
+            >
+              ABOUT ME
+            </motion.h2>
+          </div>
         </div>
       </div>
 
