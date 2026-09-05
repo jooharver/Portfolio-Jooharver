@@ -30,12 +30,12 @@ const projects = [
 
 // Data Aset Gambar Melayang
 const floatingImages = [
-  { id: 1, src: "/gambar1.png", className: styles.asset1, initialX: -150, initialY: -100, rotate: -15, delay: 0.1 },
-  { id: 2, src: "/gambar2.png", className: styles.asset2, initialX: 150, initialY: -50, rotate: 20, delay: 0.2 },
-  { id: 3, src: "/gambar3.png", className: styles.asset3, initialX: -200, initialY: 50, rotate: -10, delay: 0.2 },
-  { id: 4, src: "/gambar4.png", className: styles.asset4, initialX: 200, initialY: 100, rotate: 15, delay: 0.25 },
-  { id: 5, src: "/gambar5.png", className: styles.asset5, initialX: -100, initialY: 150, rotate: -25, delay: 0.25 },
-  { id: 6, src: "/gambar6.png", className: styles.asset6, initialX: 150, initialY: 150, rotate: 10, delay: 0.3 },
+  { id: 1, src: "/gambar1.png", className: styles.asset1, initialX: -30, initialY: -30, rotate: -15, delay: 0.1 },
+  { id: 2, src: "/gambar2.png", className: styles.asset2, initialX: 30, initialY: -15, rotate: 20, delay: 0.2 },
+  { id: 3, src: "/gambar3.png", className: styles.asset3, initialX: -40, initialY: 15, rotate: -10, delay: 0.2 },
+  { id: 4, src: "/gambar4.png", className: styles.asset4, initialX: 40, initialY: 30, rotate: 15, delay: 0.25 },
+  { id: 5, src: "/gambar5.png", className: styles.asset5, initialX: -30, initialY: 40, rotate: -25, delay: 0.25 },
+  { id: 6, src: "/gambar6.png", className: styles.asset6, initialX: 30, initialY: 40, rotate: 10, delay: 0.3 },
 ];
 
 export default function ProjectSection() {
@@ -72,14 +72,17 @@ export default function ProjectSection() {
               className={`${styles.floatingAsset} ${img.className}`}
               initial={{ opacity: 0, x: img.initialX, y: img.initialY, rotate: img.rotate - 30 }}
               whileInView={{ opacity: 1, x: 0, y: 0, rotate: img.rotate }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              
+              // KUNCI ANTI BUG MOBILE: 
+              // Berikan margin positif yang besar agar sensor mendeteksi elemen bahkan saat masih jauh di luar layar
+              viewport={{ once: true, margin: "200px" }} 
             >
               <motion.div
                 animate={{ y: [0, -15, 0], rotate: [img.rotate, img.rotate + 5, img.rotate] }}
                 transition={{ repeat: Infinity, duration: 4 + img.delay, ease: "easeInOut" }}
               >
-                <Image src={img.src} alt={`Asset`} width={200} height={200} className={styles.img} unoptimized />
+                <Image src={img.src} alt={`Asset`} width={200} height={200} className={styles.img} unoptimized priority />
               </motion.div>
             </motion.div>
           ))}
@@ -103,7 +106,9 @@ export default function ProjectSection() {
 
         <div className={styles.cardsContainer}>
           {projects.map((project, index) => {
-            const stickyTop = `calc(10vh + ${index * 24}px)`;
+            // FIX ANTI-GETAR (JITTER): Menggunakan 'svh' agar ukuran tinggi 
+            // tidak berubah saat address bar HP muncul/hilang
+            const stickyTop = `calc(10svh + ${index * 24}px)`;
 
             return (
               <div 

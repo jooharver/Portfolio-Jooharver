@@ -1,10 +1,9 @@
 .projectSection {
   position: sticky;
-  bottom: 0; /* KUNCI PARALLAX: Mengunci section ini saat mentok di bawah */
+  bottom: 0;
   z-index: 10; 
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  /* HAPUS margin negatif. Padding bawah dinolkan karena padding dialihkan ke cardsContainer */
   padding: 8rem 4vw 0 4vw; 
   background-color: transparent;
   overflow-x: clip; 
@@ -15,7 +14,8 @@
 .headerWrapper {
   position: relative;
   text-align: center;
-  margin-bottom: 8rem;
+  margin-bottom: 10rem;
+  margin-top: 10rem;
   padding: 4rem 0; 
   width: 100%;
 }
@@ -68,6 +68,8 @@
   position: absolute;
   z-index: 1; 
   pointer-events: none; 
+  /* PASTIKAN BARIS INI ADA */
+  overflow: visible;
 }
 
 .img {
@@ -83,21 +85,14 @@
 .asset5 { top: 65%; left: 2%; width: 130px; } 
 .asset6 { top: 65%; right: 5%; width: 120px; } 
 
-@media (max-width: 768px) {
-  .asset1, .asset2, .asset3, .asset4, .asset5 { width: 60px; opacity: 0.5; }
-  .asset4 { top: 50%; right: -5%; } 
-}
-
 /* --- AREA TUMPUKAN KARTU --- */
 .cardsContainer {
   position: relative;
   display: flex;
   flex-direction: column;
-  /* Jarak gulir antar kartu */
   gap: 15rem; 
-  /* KUNCI PENTING: Jalur sisa agar Kartu 1-4 tidak terdorong keluar 
-     dan memberi waktu Kartu 5 berhenti sebelum AboutSection naik */
   padding-bottom: 25vh; 
+  padding-bottom: 25svh; /* FIX JITTER MOBILE */
   max-width: 1200px; 
   margin: 0 auto;
 }
@@ -105,9 +100,8 @@
 /* KUNCI STACKING BERJENJANG */
 .cardStickyWrapper {
   position: sticky;
-  /* Top-nya diatur dinamis via JSX */
-  
   height: 75vh; 
+  height: 75svh; /* FIX JITTER MOBILE */
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -123,6 +117,10 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 -8px 25px rgba(0,0,0,0.5); 
+  
+  /* FIX JITTER MOBILE KUNCI UTAMA: Hardware Acceleration (Memaksa rendering pakai GPU) */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .cardHeader {
@@ -219,12 +217,11 @@
 @media (max-width: 1024px) {
   .projectSection { padding: 6rem 3vw 0 3vw; }
   .title { font-size: 7rem; letter-spacing: 6px; }
-  .headerWrapper { margin-bottom: 6rem; }
-  .cardsContainer { gap: 10rem; padding-bottom: 25vh; }
-  .cardStickyWrapper { height: 70vh; }
+  .headerWrapper { margin-bottom: 6rem; margin-top: 10rem; padding: 2rem 0; }
+  .cardsContainer { gap: 10rem; padding-bottom: 25vh; padding-bottom: 25svh; }
+  .cardStickyWrapper { height: 70vh; height: 70svh; }
   .cardHeader { padding: 2rem 2rem 1rem 2rem; }
   .cardNumber { font-size: 2.5rem; }
-  
   .cardBody { padding: 0 2rem 2rem 2rem; }
   .mockupWrapper { border-radius: 1.25rem !important; }
 }
@@ -232,11 +229,26 @@
 /* Responsif untuk Mobile */
 @media (max-width: 768px) {
   .projectSection { padding: 4rem 1.25rem 0 1.25rem; }
-  .title { font-size: 3.5rem; letter-spacing: 4px; }
-  .headerWrapper { margin-bottom: 4rem; padding: 2rem 0; }
   
-  .cardsContainer { gap: 8rem; padding-bottom: 25vh; }
-  .cardStickyWrapper { height: 65vh; }
+  .title { 
+    font-size: 3.5rem;
+    font-weight: 900; 
+    letter-spacing: 0; 
+    
+  }
+  
+  .headerWrapper { margin-top: 8rem; margin-bottom: 4rem; padding: 2rem 0; }
+  
+  /* Penyesuaian posisi gambar spesifik HP agar menepi dan tidak menabrak teks */
+  .asset1 { top: -30%; left: 0%; width: 45px; opacity: 0.7; }
+  .asset2 { top: -30%; right: 2%; width: 50px; opacity: 0.7; }
+  .asset3 { top: 5%; left: -12%; width: 70px; opacity: 0.4; }
+  .asset4 { top: 20%; right: -6%; width: 50px; opacity: 0.4; }
+  .asset5 { top: 90%; left: 5%; width: 50px; opacity: 0.7; }
+  .asset6 { top: 85%; right: 5%; width: 60px; opacity: 0.7; }
+
+  .cardsContainer { gap: 8rem; padding-bottom: 25vh; padding-bottom: 25svh; }
+  .cardStickyWrapper { height: 65vh; height: 65svh; }
   
   .cardInner { height: 100%; border-radius: 1.25rem; }
   

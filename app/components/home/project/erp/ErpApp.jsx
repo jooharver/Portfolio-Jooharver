@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Database, Route, X, Bell, User, LogOut, Menu, Network, Truck } from 'lucide-react';
 
@@ -14,13 +14,30 @@ export default function ErpApp({ onClose }) {
   
   // STATE NOTIFIKASI
   const [showNotif, setShowNotif] = useState(false);
+  const notifRef = useRef(null);
 
+  // EFEK 1: Mengunci Scroll Body Utama
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
     };
   }, []);
+
+  // EFEK 2: Menutup Notifikasi jika klik area di luar card (Click Outside)
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotif(false);
+      }
+    }
+    if (showNotif) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showNotif]);
 
   const handleTabSwitch = (tab) => {
     setActiveTab(tab);
@@ -90,18 +107,25 @@ export default function ErpApp({ onClose }) {
             <span className="text-slate-400 text-sm font-medium">/ Modul Logistik Interaktif</span>
           </div>
           
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             
-            {/* WRAPPER NOTIFIKASI */}
-            <div className="relative">
-              <button onClick={() => setShowNotif(!showNotif)} className={`w-10 h-10 rounded-full border flex items-center justify-center transition-colors ${showNotif ? 'bg-slate-100 border-slate-300 text-slate-900' : 'bg-slate-50 border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>
+            {/* WRAPPER NOTIFIKASI DENGAN REF UNTUK CLICK-OUTSIDE */}
+            <div className="relative" ref={notifRef}>
+              <button onClick={() => setShowNotif(!showNotif)} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full border flex items-center justify-center transition-colors ${showNotif ? 'bg-slate-100 border-slate-300 text-slate-900' : 'bg-slate-50 border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>
                 <Bell size={18} />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
+                <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
               </button>
               
               <AnimatePresence>
                 {showNotif && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full right-0 mt-2 w-80 bg-white border border-slate-200 shadow-xl rounded-2xl p-2 z-50">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }} 
+                    animate={{ opacity: 1, y: 0, scale: 1 }} 
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }} 
+                    transition={{ duration: 0.15 }}
+                    // KUNCI PERBAIKAN: Gunakan fixed dan translate-x untuk Mobile agar di tengah, dan absolute right-0 untuk PC
+                    className="fixed top-16 left-1/2 -translate-x-1/2 sm:absolute sm:top-full sm:left-auto sm:-translate-x-0 sm:right-0 mt-2 w-[90vw] sm:w-80 max-w-[340px] bg-white border border-slate-200 shadow-2xl rounded-2xl p-2 z-[99999]"
+                  >
                     <div className="flex justify-between items-center p-3 border-b border-slate-100">
                       <h4 className="font-bold text-slate-900 text-sm">Notifikasi Terkini</h4>
                       <span className="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">1 Baru</span>
@@ -123,23 +147,29 @@ export default function ErpApp({ onClose }) {
               </AnimatePresence>
             </div>
             
-            <button onClick={onClose} className="hidden sm:flex items-center gap-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white border border-rose-100 hover:border-rose-600 px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm">
+            {/* TOMBOL EXIT DESKTOP */}
+            <button onClick={onClose} className="hidden sm:flex items-center gap-2 bg-rose-600 text-white hover:bg-rose-500 px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_20px_rgba(244,63,94,0.5)]">
               <LogOut size={16} /> Exit Live Project
             </button>
 
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden flex items-center justify-center w-10 h-10 bg-slate-50 border border-slate-200 rounded-lg text-slate-600">
+            {/* TOMBOL EXIT MOBILE */}
+            <button onClick={onClose} className="md:hidden flex items-center gap-1.5 bg-rose-600 text-white hover:bg-rose-500 px-3 py-2 rounded-lg text-sm font-bold transition-all shadow-[0_0_10px_rgba(225,29,72,0.3)]">
+              <LogOut size={16} /> Exit
+            </button>
+
+            {/* TOMBOL MENU MOBILE */}
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-slate-50 border border-slate-200 rounded-lg text-slate-600">
               {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
 
+          {/* MENU DROPDOWN MOBILE */}
           <AnimatePresence>
             {isMobileMenuOpen && (
               <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-xl flex flex-col p-4 gap-2 md:hidden z-50">
                 <button onClick={() => handleTabSwitch('dashboard')} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm ${activeTab === 'dashboard' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}><LayoutDashboard size={18}/> Dashboard</button>
                 <button onClick={() => handleTabSwitch('master')} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm ${activeTab === 'master' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}><Database size={18}/> Master Data</button>
                 <button onClick={() => handleTabSwitch('tracking')} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm ${activeTab === 'tracking' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}`}><Route size={18}/> Supply Chain</button>
-                <div className="h-[1px] w-full bg-slate-100 my-2"></div>
-                <button onClick={onClose} className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-rose-50 text-rose-600 font-bold border border-rose-100"><LogOut size={18}/> Keluar Demo</button>
               </motion.div>
             )}
           </AnimatePresence>

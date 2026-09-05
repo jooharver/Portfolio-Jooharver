@@ -354,7 +354,7 @@ function CheckoutView() {
       <div className="space-y-6">
         <div className="bg-white p-6 rounded-2xl border border-[#EBEAE5] shadow-sm">
           <div className="flex items-center gap-2 text-[#9B7E5D] font-bold mb-4"><Map size={18}/> Alamat Pengiriman</div>
-          <p className="font-bold text-[#1C2C24]">Eka Krisna F. (+62 812-3456-7890)</p>
+          <p className="font-bold text-[#1C2C24]">Anonymous (+62 812-3456-7890)</p>
           <p className="text-[#5C6E63] text-sm mt-1">Jl. Soekarno Hatta No. 9, Lowokwaru, Kota Malang, Jawa Timur</p>
         </div>
 
@@ -414,7 +414,7 @@ function CheckoutView() {
           <div className="flex justify-between border-t border-[#EBEAE5] pt-4"><span className="font-bold text-[#1C2C24]">Total Pembayaran</span><span className="text-xl font-black text-[#9B7E5D]">Rp {(subtotal + shippingCost).toLocaleString('id-ID')}</span></div>
         </div>
 
-        <button onClick={() => processCheckout({ name: 'Eka Krisna F.', address: 'Malang', payment: paymentMethod })} className="w-full py-4 bg-[#1C2C24] text-white rounded-xl font-bold hover:bg-[#2A4034] transition-colors shadow-md">
+        <button onClick={() => processCheckout({ name: 'Anonymous', address: 'Malang', payment: paymentMethod })} className="w-full py-4 bg-[#1C2C24] text-white rounded-xl font-bold hover:bg-[#2A4034] transition-colors shadow-md">
           Bayar Sekarang
         </button>
       </div>

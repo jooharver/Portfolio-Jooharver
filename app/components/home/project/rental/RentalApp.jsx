@@ -107,7 +107,11 @@ export default function RentalApp({ onClose }) {
               </div>
             </div>
             
-            <button onClick={onClose} className="flex items-center gap-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-4 py-2 rounded-full font-bold text-sm transition-colors">
+            {/* TOMBOL EXIT DIPERBARUI */}
+            <button 
+              onClick={onClose} 
+              className="flex items-center gap-2 bg-rose-600 text-white hover:bg-rose-500 px-4 py-2 rounded-full font-bold text-sm transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_20px_rgba(244,63,94,0.5)]"
+            >
               <X size={16} /> Exit Live Project
             </button>
           </div>

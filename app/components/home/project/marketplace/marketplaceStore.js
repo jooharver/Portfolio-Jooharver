@@ -65,7 +65,7 @@ const hydratedProducts = baseProducts.map(p => ({
 }));
 
 export const useMarketplaceStore = create((set, get) => ({
-  currentUser: { name: 'Eka Krisna', role: 'Seller', shopName: 'Nexus Fashion Official' },
+  currentUser: { name: 'Anonymous', role: 'Seller', shopName: 'Nexus Fashion Official' },
   
   clientView: 'home', 
   selectedProduct: null,
@@ -98,7 +98,7 @@ export const useMarketplaceStore = create((set, get) => ({
       item: hydratedProducts[0], 
       qty: 1, 
       total: 185000 + 15000,
-      shipping: { name: 'Eka Krisna F.', address: 'Malang', payment: 'QRIS' }
+      shipping: { name: 'Anonymous', address: 'Malang', payment: 'QRIS' }
     }
   ],
 

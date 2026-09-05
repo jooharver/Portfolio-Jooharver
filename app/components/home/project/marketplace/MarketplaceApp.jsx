@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShoppingCart, Store, User, Bell, LogOut, Heart, Package, Inbox } from 'lucide-react';
+import { Search, ShoppingCart, Store, User, Bell, LogOut, Package, Inbox } from 'lucide-react';
 import { useMarketplaceStore } from './marketplaceStore';
 
 import ClientView from './views/ClientView';
 import SellerView from './views/SellerView';
 
 export default function MarketplaceApp({ onClose }) {
-  const { cart, wishlist, setClientView, searchQuery, setSearchQuery } = useMarketplaceStore();
+  const { cart, setClientView, setSearchQuery } = useMarketplaceStore();
   const [activeRole, setActiveRole] = useState('client'); 
   
   const [localSearch, setLocalSearch] = useState('');
@@ -17,12 +17,9 @@ export default function MarketplaceApp({ onClose }) {
   const notifRef = useRef();
 
   useEffect(() => {
-    // Mengunci scroll di body dan html secara bersamaan
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
-    
     return () => { 
-      // Mengembalikan scroll saat modal Live Demo ditutup
       document.body.style.overflow = ''; 
       document.documentElement.style.overflow = ''; 
     };
@@ -57,16 +54,21 @@ export default function MarketplaceApp({ onClose }) {
     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 30 }} transition={{ duration: 0.4 }} className="fixed inset-0 z-[9999999] bg-[#F9F8F6] font-sans flex flex-col overflow-hidden text-[#1C2C24]">
       
       {/* TOP BAR */}
-      <div className="bg-[#1C2C24] text-[#C2BBAF] text-[11px] font-medium py-1.5 px-4 md:px-8 flex justify-between items-center z-50">
-        <div className="flex gap-4">
-          <button onClick={() => handleRoleSwitch('seller')} className="hover:text-[#F4F1EA] transition-colors">Seller Centre</button>
-          <span className="hidden md:inline text-[#5C6E63]">|</span>
-          <button className="hidden md:inline hover:text-[#F4F1EA] transition-colors">Download Aplikasi</button>
+      <div className="bg-[#1C2C24] text-[#C2BBAF] text-[11px] font-medium py-1.5 px-3 md:px-8 flex justify-between items-center z-50">
+        <div className="flex gap-4 shrink-0">
+          {/* FIX: Toggle Role 2 Arah */}
+          <button 
+            onClick={() => handleRoleSwitch(activeRole === 'client' ? 'seller' : 'client')} 
+            className="hover:text-[#F4F1EA] transition-colors"
+          >
+            {activeRole === 'client' ? 'Mode Seller' : 'Mode Belanja'}
+          </button>
         </div>
-        <div className="flex gap-4 items-center relative">
+        
+        <div className="flex gap-3 md:gap-4 items-center relative">
           <div ref={notifRef} className="relative">
             <button onClick={() => setIsNotifOpen(!isNotifOpen)} className="flex items-center gap-1 hover:text-[#F4F1EA] cursor-pointer transition-colors">
-              <Bell size={12}/> Notifikasi
+              <Bell size={12}/> <span className="hidden sm:inline">Notifikasi</span>
             </button>
             <AnimatePresence>
               {isNotifOpen && (
@@ -79,20 +81,38 @@ export default function MarketplaceApp({ onClose }) {
             </AnimatePresence>
           </div>
 
-          <button onClick={() => { handleRoleSwitch('client'); setClientView('orders'); }} className="flex items-center gap-1 hover:text-[#F4F1EA] cursor-pointer transition-colors"><Package size={12}/> Pesanan Saya</button>
+          {/* FIX: Pesanan Saya Dimunculkan di Mobile */}
+          <button onClick={() => { handleRoleSwitch('client'); setClientView('orders'); }} className="flex items-center gap-1 hover:text-[#F4F1EA] cursor-pointer transition-colors text-center leading-tight">
+            <Package size={12} className="shrink-0"/> 
+            <span className="hidden sm:inline">Pesanan Saya</span>
+            <span className="sm:hidden text-[10px]">Pesanan<br/>Saya</span>
+          </button>
+          
           <span className="text-[#5C6E63]">|</span>
-          <button onClick={onClose} className="font-bold text-[#F4F1EA] hover:text-[#D1C3A5] flex items-center gap-1 transition-colors"><LogOut size={12}/>Exit Live Project</button>
+          
+          {/* TOMBOL EXIT DESKTOP */}
+          <button onClick={onClose} className="hidden md:flex font-bold text-white bg-rose-600 hover:bg-rose-500 px-3 py-1.5 rounded-md items-center gap-1 transition-all shadow-[0_0_10px_rgba(225,29,72,0.3)] shrink-0">
+            <LogOut size={12}/> Exit Live Project
+          </button>
+          
+          {/* TOMBOL EXIT MOBILE (Teks Lebih Singkat) */}
+          <button onClick={onClose} className="md:flex hidden font-bold text-white bg-rose-600 hover:bg-rose-500 px-2.5 py-1.5 rounded-[4px] items-center gap-1 transition-all shadow-[0_0_10px_rgba(225,29,72,0.3)] shrink-0" style={{ display: 'flex' }}>
+            <LogOut size={12} className="md:hidden"/> 
+            <span className="md:hidden">Exit</span>
+          </button>
         </div>
       </div>
 
       {/* MAIN NAVBAR */}
       <header className="bg-white h-20 flex items-center px-4 md:px-8 gap-4 md:gap-8 border-b border-[#EBEAE5] z-50 sticky top-0 shadow-sm">
-        <div className="flex items-center gap-2 text-[#1C2C24] shrink-0 cursor-pointer" onClick={() => { handleRoleSwitch('client'); setLocalSearch(''); }}>
+        
+        {/* EFEK HOVER SCALE PADA LOGO */}
+        <div className="flex items-center gap-2 text-[#1C2C24] shrink-0 cursor-pointer hover:scale-105 transition-transform origin-left" onClick={() => { handleRoleSwitch('client'); setLocalSearch(''); }}>
           <ShoppingBagIcon size={32} className="shrink-0" />
           <span className="font-black text-2xl tracking-tight hidden md:block uppercase">NEXUS<span className="font-light text-[#5C6E63]">MALL</span></span>
         </div>
 
-        <div className="flex-1 max-w-4xl relative min-w-0"> {/* min-w-0 penting untuk truncate input */}
+        <div className="flex-1 max-w-4xl relative min-w-0"> 
           <input 
             type="text" 
             value={localSearch}
@@ -115,16 +135,19 @@ export default function MarketplaceApp({ onClose }) {
           <div className="w-[1px] h-6 bg-[#EBEAE5] mx-1 hidden md:block"></div>
 
           <button onClick={() => handleRoleSwitch(activeRole === 'client' ? 'seller' : 'client')} className="hidden md:flex items-center gap-2 bg-white hover:bg-[#F4F1EA] border border-[#EBEAE5] px-4 py-2 rounded-lg text-sm font-bold transition-all text-[#1C2C24]">
-            {activeRole === 'client' ? <><Store size={16}/> Toko Saya</> : <><ShoppingBagIcon size={16}/> Mode Belanja</>}
+            {activeRole === 'client' ? <><Store size={16}/> Mode Seller</> : <><ShoppingBagIcon size={16}/> Mode Belanja</>}
           </button>
           
           <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#F4F1EA] flex items-center justify-center border border-[#EBEAE5] cursor-pointer text-[#5C6E63] hover:text-[#1C2C24] transition-colors shrink-0"><User size={18} /></div>
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto custom-scrollbar bg-[#F9F8F6] relative">
+      <main className="flex-1 flex overflow-y-auto custom-scrollbar bg-[#F9F8F6] relative">
         <AnimatePresence mode="wait">
-          {activeRole === 'client' ? <motion.div key="client" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}}><ClientView /></motion.div> : <motion.div key="seller" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}}><SellerView /></motion.div>}
+          {activeRole === 'client' 
+            ? <motion.div key="client" className="w-full" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}}><ClientView /></motion.div> 
+            : <motion.div key="seller" className="w-full flex" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}}><SellerView /></motion.div>
+          }
         </AnimatePresence>
       </main>
     </motion.div>

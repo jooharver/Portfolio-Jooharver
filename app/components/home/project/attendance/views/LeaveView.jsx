@@ -1,50 +1,119 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Search, Plus, Lock, CheckCircle2, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Search, Plus, Lock, CheckCircle2, ChevronRight, AlertCircle, Maximize, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAttendanceStore } from '../store/useAttendanceStore';
 
 export default function LeaveView({ type, setActiveTab }) {
+  const { leaves, addLeave } = useAttendanceStore();
+  
   const [showForm, setShowForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [toastMsg, setToastMsg] = useState('');
+  
+  // State untuk Fitur Lihat Gambar Full Layar
+  const [expandedImage, setExpandedImage] = useState(null);
+
+  const [formData, setFormData] = useState({
+    startDate: '',
+    endDate: '',
+    reason: '',
+    detail: ''
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  const dummyData = [
-    { 
-      id: 1, 
-      startDate: '12 Ags 2026', 
-      endDate: '14 Ags 2026', 
-      reason: type === 'Sakit' ? 'Demam Berdarah' : 'Cuti Tahunan', 
-      detail: type === 'Sakit' 
-        ? 'Berdasarkan hasil lab klinik, diwajibkan istirahat total selama 3 hari pemulihan. Surat dokter terlampir.' 
-        : 'Mengambil jatah cuti tahunan untuk agenda liburan keluarga ke luar kota.', 
-      status: 'Disetujui' 
-    },
-    { 
-      id: 2, 
-      startDate: '05 Jul 2026', 
-      endDate: '05 Jul 2026', 
-      reason: type === 'Sakit' ? 'Migrain Berat' : 'Acara Keluarga', 
-      detail: type === 'Sakit' 
-        ? 'Mengalami sakit kepala sebelah (migrain) kronis sejak pagi. Tidak memungkinkan menatap monitor, izin istirahat 1 hari.' 
-        : 'Meminta izin cuti 1 hari untuk menghadiri acara pernikahan saudara kandung di Yogyakarta.', 
-      status: 'Disetujui' 
-    },
-  ];
+  const formatDateInput = (dateString) => {
+    if (!dateString) return '';
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+    const d = new Date(dateString);
+    return `${("0" + d.getDate()).slice(-2)} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  };
 
-  const filteredData = dummyData.filter(d => 
-    d.reason.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
-    d.startDate.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-    d.endDate.toLowerCase().includes(debouncedSearch.toLowerCase())
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    
+    const newLeave = {
+      id: Date.now(),
+      type: type,
+      startDate: formatDateInput(formData.startDate),
+      endDate: formatDateInput(formData.endDate),
+      reason: formData.reason,
+      detail: formData.detail,
+      status: 'Menunggu Konfirmasi',
+      attachment: null // Data baru tidak memiliki attachment karena fitur upload dikunci
+    };
+
+    addLeave(newLeave);
+    
+    setFormData({ startDate: '', endDate: '', reason: '', detail: '' });
+    setShowForm(false);
+    setToastMsg('Pengajuan berhasil dikirim!');
+    setTimeout(() => setToastMsg(''), 3000);
+  };
+
+  const filteredData = leaves.filter(d => 
+    d.type === type && (
+      d.reason.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+      d.startDate.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      d.endDate.toLowerCase().includes(debouncedSearch.toLowerCase())
+    )
   );
 
   return (
     <div className="h-full flex flex-col relative overflow-hidden">
       
-      {/* MODAL FORM / DETAIL PENGAJUAN */}
+      {/* Toast Notification Lokal */}
+      <AnimatePresence>
+        {toastMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+            className="absolute top-4 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-950/90 border border-emerald-500/50 text-emerald-100 backdrop-blur-md shadow-xl"
+          >
+            <CheckCircle2 size={16} className="text-emerald-400"/>
+            <span className="font-medium text-xs whitespace-nowrap">{toastMsg}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* MODAL GAMBAR FULLSCREEN (LIGHTBOX) - Diperbaiki agar tidak keluar frame HP di PC */}
+      <AnimatePresence>
+        {expandedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            /* FIX: Menggunakan absolute alih-alih fixed agar tetap terkurung di dalam frame HP */
+            className="absolute inset-0 z-[999999] bg-black/95 backdrop-blur-md flex items-center justify-center p-4"
+            onClick={() => setExpandedImage(null)} 
+          >
+            {/* Tombol Exit Fullscreen di Pojok Kanan Atas */}
+            <button 
+              className="absolute top-4 right-4 p-2 bg-zinc-800/80 hover:bg-rose-600 text-zinc-300 hover:text-white rounded-full transition-colors z-10"
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpandedImage(null);
+              }}
+            >
+              <X size={20} />
+            </button>
+            <motion.img
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              src={expandedImage}
+              alt="Lampiran Full"
+              className="max-w-full max-h-full object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()} 
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {(showForm || selectedItem) && (
         <div className="absolute inset-0 z-50 bg-[#09090b] flex flex-col overflow-hidden animate-in slide-in-from-bottom-10">
           
@@ -52,64 +121,106 @@ export default function LeaveView({ type, setActiveTab }) {
             <h3 className="text-white font-bold">{selectedItem ? 'Detail Pengajuan' : `Form ${type}`}</h3>
           </div>
           
-          <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-5 custom-scrollbar pb-32 w-full">
+          <form onSubmit={handleFormSubmit} className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-5 custom-scrollbar pb-32 w-full flex flex-col">
             
-            {/* INPUT TANGGAL: Disusun Vertikal (Atas-Bawah) agar 100% aman di layar HP */}
-            <div className="flex flex-col gap-5 w-full">
-              <div className="space-y-1 w-full">
-                <label className="text-xs text-zinc-400">Tanggal Mulai</label>
-                <input 
-                  type={selectedItem ? "text" : "date"} 
-                  readOnly={!!selectedItem} 
-                  defaultValue={selectedItem?.startDate || ''}
-                  className={`w-full max-w-full block appearance-none bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm outline-none ${selectedItem ? 'opacity-70' : 'focus:border-emerald-500'}`} 
-                />
-              </div>
-              <div className="space-y-1 w-full">
-                <label className="text-xs text-zinc-400">Tanggal Selesai</label>
-                <input 
-                  type={selectedItem ? "text" : "date"} 
-                  readOnly={!!selectedItem} 
-                  defaultValue={selectedItem?.endDate || ''}
-                  className={`w-full max-w-full block appearance-none bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm outline-none ${selectedItem ? 'opacity-70' : 'focus:border-emerald-500'}`} 
-                />
-              </div>
-            </div>
-
             <div className="space-y-1 w-full">
-              <label className="text-xs text-zinc-400">Keterangan Lengkap</label>
-              <textarea 
-                rows={3} 
-                readOnly={!!selectedItem}
-                defaultValue={selectedItem?.detail || ''}
-                placeholder="Tulis alasan detail..." 
+              <label className="text-xs text-zinc-400">Judul / Alasan Singkat</label>
+              <input 
+                required
+                type="text" 
+                readOnly={!!selectedItem} 
+                value={selectedItem ? selectedItem.reason : formData.reason}
+                onChange={(e) => setFormData({...formData, reason: e.target.value})}
+                placeholder={`Misal: ${type === 'Sakit' ? 'Sakit Tipes' : 'Cuti Liburan'}`}
                 className={`w-full max-w-full block appearance-none bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm outline-none ${selectedItem ? 'opacity-70' : 'focus:border-emerald-500'}`} 
               />
             </div>
-            
-            <div className="space-y-1 w-full">
-              <label className="text-xs text-zinc-400">Lampiran Bukti (Surat Dokter/Dll)</label>
-              <div className="relative w-full h-32 bg-[#121214] border-2 border-dashed border-zinc-800 rounded-xl flex flex-col items-center justify-center opacity-50 cursor-not-allowed overflow-hidden">
-                <Lock size={24} className="text-zinc-500 mb-2 shrink-0" />
-                <span className="text-xs text-zinc-500 font-medium text-center px-4">Fitur Lampiran Terkunci</span>
-                <span className="text-[10px] text-zinc-600 px-8 text-center mt-1">Memerlukan koneksi ke Database Backend API (AWS S3 / Supabase).</span>
+
+            <div className="flex flex-col gap-5 w-full">
+              <div className="space-y-1 w-full">
+                <label className="text-xs text-zinc-400">Tanggal Mulai</label>
+                {selectedItem ? (
+                  <input type="text" readOnly value={selectedItem.startDate} className="w-full bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm outline-none opacity-70" />
+                ) : (
+                  <input required type="date" value={formData.startDate} onChange={(e) => setFormData({...formData, startDate: e.target.value})} className="w-full bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-emerald-500" />
+                )}
+              </div>
+              <div className="space-y-1 w-full">
+                <label className="text-xs text-zinc-400">Tanggal Selesai</label>
+                {selectedItem ? (
+                  <input type="text" readOnly value={selectedItem.endDate} className="w-full bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm outline-none opacity-70" />
+                ) : (
+                  <input required type="date" value={formData.endDate} onChange={(e) => setFormData({...formData, endDate: e.target.value})} className="w-full bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-emerald-500" />
+                )}
               </div>
             </div>
-          </div>
 
-          <div className="absolute bottom-0 left-0 w-full p-6 bg-[#09090b] border-t border-zinc-800 flex gap-3 shrink-0">
-            <button 
-              onClick={() => { setShowForm(false); setSelectedItem(null); }} 
-              className="flex-1 bg-zinc-800 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-700 transition-colors"
-            >
-              Kembali
-            </button>
-            {!selectedItem && (
-              <button disabled className="flex-1 bg-emerald-600/50 text-white py-3 rounded-xl text-sm font-semibold cursor-not-allowed">
-                Kirim Pengajuan
+            <div className="space-y-1 w-full flex-1 flex flex-col">
+              <label className="text-xs text-zinc-400">Keterangan Lengkap</label>
+              <textarea 
+                required
+                readOnly={!!selectedItem}
+                value={selectedItem ? selectedItem.detail : formData.detail}
+                onChange={(e) => setFormData({...formData, detail: e.target.value})}
+                placeholder="Tulis detail alasan pengajuan..." 
+                className={`w-full flex-1 min-h-[100px] max-w-full block appearance-none bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm outline-none resize-none ${selectedItem ? 'opacity-70' : 'focus:border-emerald-500'}`} 
+              />
+            </div>
+            
+            <div className="space-y-1 w-full pb-4">
+              <label className="text-xs text-zinc-400">Lampiran Bukti (Surat Dokter/Dll)</label>
+              
+              {selectedItem ? (
+                selectedItem.attachment ? (
+                  <div 
+                    onClick={() => setExpandedImage(selectedItem.attachment)}
+                    className="relative w-full h-48 bg-[#18181b] border border-zinc-800 rounded-xl overflow-hidden cursor-pointer group hover:border-zinc-600 transition-colors"
+                  >
+                    {/* Gambar Lampiran */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img 
+                      src={selectedItem.attachment} 
+                      alt="Lampiran" 
+                      className="w-full h-full object-contain p-2" 
+                    />
+                    
+                    {/* FIX: Tombol Maximize selalu aktif di pojok kanan atas */}
+                    <div className="absolute top-2 right-2 bg-black/70 text-white p-1.5 rounded-lg flex items-center justify-center backdrop-blur-sm shadow-md group-hover:bg-black/90 transition-colors">
+                      <Maximize size={16} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative w-full h-20 bg-[#18181b] border border-zinc-800 rounded-xl flex items-center justify-center opacity-70">
+                    <span className="text-xs text-zinc-500">Tidak ada lampiran disertakan</span>
+                  </div>
+                )
+              ) : (
+                <div className="relative w-full h-24 bg-[#121214] border-2 border-dashed border-zinc-800 rounded-xl flex flex-col items-center justify-center opacity-50 cursor-not-allowed overflow-hidden">
+                  <Lock size={20} className="text-zinc-500 mb-1 shrink-0" />
+                  <span className="text-[10px] text-zinc-500 font-medium text-center px-4">Fitur Lampiran Terkunci</span>
+                </div>
+              )}
+            </div>
+
+            <div className="absolute bottom-0 left-0 w-full p-6 bg-[#09090b] border-t border-zinc-800 flex gap-3 shrink-0">
+              <button 
+                type="button"
+                onClick={() => { setShowForm(false); setSelectedItem(null); setFormData({startDate: '', endDate: '', reason: '', detail: ''}); }} 
+                className="flex-1 bg-zinc-800 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-700 transition-colors"
+              >
+                Kembali
               </button>
-            )}
-          </div>
+              {!selectedItem && (
+                <button 
+                  type="submit"
+                  disabled={!formData.startDate || !formData.endDate || !formData.reason || !formData.detail}
+                  className="flex-1 bg-emerald-600 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Kirim Pengajuan
+                </button>
+              )}
+            </div>
+          </form>
         </div>
       )}
 
@@ -154,8 +265,13 @@ export default function LeaveView({ type, setActiveTab }) {
                   <span className="text-[10px] text-zinc-400 font-mono bg-zinc-900 px-2 py-1 rounded-md shrink-0">
                     {d.startDate === d.endDate ? d.startDate : `${d.startDate} - ${d.endDate}`}
                   </span>
-                  <div className="flex items-center gap-1 bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-md shrink-0">
-                    <CheckCircle2 size={12} />
+                  
+                  <div className={`flex items-center gap-1 px-2 py-1 rounded-md shrink-0 ${
+                    d.status === 'Disetujui' ? 'bg-emerald-500/10 text-emerald-400' : 
+                    d.status === 'Ditolak' ? 'bg-rose-500/10 text-rose-400' : 
+                    'bg-amber-500/10 text-amber-400'
+                  }`}>
+                    {d.status === 'Disetujui' ? <CheckCircle2 size={12} /> : d.status === 'Menunggu Konfirmasi' ? <AlertCircle size={12} /> : null}
                     <span className="text-[10px] font-bold truncate">{d.status}</span>
                   </div>
                 </div>

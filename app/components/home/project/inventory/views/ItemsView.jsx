@@ -109,7 +109,7 @@ export default function ItemsView() {
   return (
     <div className="space-y-6 relative">
       
-      {/* KUNCI FIX: Toast Notification Mengambang Responsive */}
+      {/* Toast Notification */}
       <AnimatePresence>
         {toast.show && (
           <motion.div
@@ -254,17 +254,71 @@ export default function ItemsView() {
               <form onSubmit={handleSubmit} className="p-4 md:p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-4">
-                    <div><label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Nama Produk</label><input required disabled={modalConfig.type === 'view'} type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none" /></div>
-                    <div><label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Kategori</label><select required disabled={modalConfig.type === 'view'} value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none appearance-none">{KATEGORI_OPTIONS.map(cat => (<option key={cat} value={cat}>{cat}</option>))}</select></div>
+                    {/* INPUT DENGAN PLACEHOLDER */}
+                    <div>
+                      <label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Nama Produk</label>
+                      <input 
+                        required 
+                        disabled={modalConfig.type === 'view'} 
+                        type="text" 
+                        value={formData.name} 
+                        onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                        placeholder="Contoh: ACER Nitro V15" 
+                        className="w-full bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none placeholder-zinc-600" 
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Kategori</label>
+                      <select required disabled={modalConfig.type === 'view'} value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none appearance-none">
+                        {KATEGORI_OPTIONS.map(cat => (<option key={cat} value={cat}>{cat}</option>))}
+                      </select>
+                    </div>
+                    
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
-                      <div><label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Stok Unit</label><input required disabled={modalConfig.type === 'view'} type="text" value={formatNumberInput(formData.stock)} onChange={(e) => handleNumberChange('stock', e.target.value)} className="w-full bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none" /></div>
-                      <div><label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Harga (Rp)</label><input required disabled={modalConfig.type === 'view'} type="text" value={formatNumberInput(formData.price)} onChange={(e) => handleNumberChange('price', e.target.value)} className="w-full bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none" /></div>
+                      <div>
+                        <label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Stok Unit</label>
+                        <input 
+                          required 
+                          disabled={modalConfig.type === 'view'} 
+                          type="text" 
+                          value={formatNumberInput(formData.stock)} 
+                          onChange={(e) => handleNumberChange('stock', e.target.value)} 
+                          placeholder="Misal: 50" 
+                          className="w-full bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none placeholder-zinc-600" 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Harga (Rp)</label>
+                        <input 
+                          required 
+                          disabled={modalConfig.type === 'view'} 
+                          type="text" 
+                          value={formatNumberInput(formData.price)} 
+                          onChange={(e) => handleNumberChange('price', e.target.value)} 
+                          placeholder="Misal: 15.000.000" 
+                          className="w-full bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none placeholder-zinc-600" 
+                        />
+                      </div>
                     </div>
                   </div>
+                  
                   <div className="space-y-4">
-                    <div className="h-full flex flex-col"><label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Deskripsi {modalConfig.type === 'add' && <span className="text-zinc-600 text-[10px] md:text-xs italic">(Opsional)</span>}</label><textarea disabled={modalConfig.type === 'view'} value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full flex-1 min-h-[120px] md:min-h-[150px] bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none resize-none" /></div>
+                    <div className="h-full flex flex-col">
+                      <label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">
+                        Deskripsi {modalConfig.type === 'add' && <span className="text-zinc-600 text-[10px] md:text-xs italic">(Opsional)</span>}
+                      </label>
+                      <textarea 
+                        disabled={modalConfig.type === 'view'} 
+                        value={formData.description} 
+                        onChange={(e) => setFormData({...formData, description: e.target.value})} 
+                        placeholder="Tuliskan detail spesifikasi atau keterangan tambahan produk di sini..." 
+                        className="w-full flex-1 min-h-[120px] md:min-h-[150px] bg-[#09090b] border border-zinc-700 rounded-lg px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white disabled:opacity-50 focus:border-[#b300ff] focus:outline-none resize-none placeholder-zinc-600" 
+                      />
+                    </div>
                   </div>
                 </div>
+                
                 <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-zinc-800">
                   <button type="button" onClick={closeModal} className="px-4 py-2 text-sm rounded-lg text-zinc-300 bg-zinc-800 hover:bg-zinc-700">{modalConfig.type === 'view' ? 'Tutup Detail' : 'Batal'}</button>
                   {modalConfig.type !== 'view' && (<button type="submit" className="px-4 py-2 text-sm rounded-lg text-white bg-gradient-to-r from-[#b300ff] to-[#ffa67a] font-medium hover:scale-105">Simpan Data</button>)}

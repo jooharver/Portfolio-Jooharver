@@ -17,7 +17,7 @@ export default function FeatureLockedView({ title, setActiveTab }) {
         </div>
         <h3 className="text-white font-bold text-lg mb-2">Fitur {title} Terkunci</h3>
         <p className="text-zinc-400 text-xs leading-relaxed max-w-[250px] mx-auto">
-          Layanan manajemen <strong>{title}</strong> membutuhkan integrasi langsung dengan server HRIS dan Database Keuangan. Fitur ini dinonaktifkan pada mode Live Demo.
+          Layanan manajemen <strong>{title}</strong> membutuhkan integrasi langsung dengan server backend. Fitur ini dinonaktifkan pada mode Live Demo.
         </p>
       </div>
     </div>

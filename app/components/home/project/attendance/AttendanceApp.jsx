@@ -45,7 +45,7 @@ export default function AttendanceApp({ onClose }) {
       {/* TOMBOL EXIT LIVE DEMO (DESKTOP) */}
       <button 
         onClick={onClose}
-        className="hidden sm:flex absolute top-8 right-8 items-center gap-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-5 py-3 rounded-full transition-all font-semibold text-sm shadow-lg backdrop-blur-md z-50"
+        className="hidden sm:flex absolute top-8 right-8 items-center gap-2 bg-rose-600 text-white hover:bg-rose-500 px-5 py-3 rounded-full transition-all font-semibold text-sm shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_20px_rgba(244,63,94,0.5)] z-50"
       >
         <LogOut size={18} />
         Exit Live Project
@@ -111,7 +111,7 @@ export default function AttendanceApp({ onClose }) {
             {/* TOMBOL EXIT LIVE DEMO (MOBILE) */}
             <button 
               onClick={onClose} 
-              className="sm:hidden flex items-center gap-1.5 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 px-3 py-1.5 rounded-full transition-colors border border-rose-500/20"
+              className="sm:hidden flex items-center gap-1.5 bg-rose-600 text-white hover:bg-rose-500 px-3 py-1.5 rounded-full transition-all shadow-[0_0_10px_rgba(225,29,72,0.3)]"
             >
               <LogOut size={12} />
               <span className="text-[10px] font-bold">Exit Live Project</span>

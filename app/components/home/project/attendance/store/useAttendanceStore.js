@@ -22,24 +22,19 @@ const generateHistory = () => {
       let timeIn = '07:50';
       let timeOut = '17:05';
 
-      // 1. Rekayasa Data 3 Hari Terakhir agar bervariasi
       if (count === 0) {
-        // 1 hari kerja lalu: Tepat Waktu (Hijau)
         status = 'Tepat Waktu';
         timeIn = '07:55';
         timeOut = '17:15';
       } else if (count === 1) {
-        // 2 hari kerja lalu: Terlambat (Merah)
         status = 'Terlambat';
-        timeIn = '08:25'; // Telat
+        timeIn = '08:25'; 
         timeOut = '17:05';
       } else if (count === 2) {
-        // 3 hari kerja lalu: Pulang Awal (Orange)
         status = 'Pulang Awal';
         timeIn = '07:45';
-        timeOut = '15:30'; // Pulang jam setengah 4 sore
+        timeOut = '15:30'; 
       } else {
-        // 2. Sisanya (Acak 20% Terlambat)
         const isLate = Math.random() > 0.8; 
         status = isLate ? 'Terlambat' : 'Tepat Waktu';
         timeIn = isLate ? '08:15' : '07:50';
@@ -47,7 +42,7 @@ const generateHistory = () => {
       }
 
       history.push({
-        id: d.getTime(),
+        id: d.getTime() + count,
         date: formatFullDate(new Date(d)),
         in: timeIn,
         out: timeOut,
@@ -61,8 +56,33 @@ const generateHistory = () => {
   return history;
 };
 
+// Data Dummy Riwayat Cuti/Sakit Awal (Ditambah lampiran)
+const initialLeaves = [
+  { 
+    id: 1, 
+    type: 'Sakit',
+    startDate: '12 Ags 2026', 
+    endDate: '14 Ags 2026', 
+    reason: 'Demam Berdarah', 
+    detail: 'Berdasarkan hasil lab klinik, diwajibkan istirahat total selama 3 hari pemulihan. Surat dokter terlampir.', 
+    status: 'Disetujui',
+    attachment: '/surat-sakit.jpg'
+  },
+  { 
+    id: 2, 
+    type: 'Cuti',
+    startDate: '05 Jul 2026', 
+    endDate: '05 Jul 2026', 
+    reason: 'Acara Keluarga', 
+    detail: 'Meminta izin cuti 1 hari untuk menghadiri acara pernikahan saudara kandung di Yogyakarta.', 
+    status: 'Disetujui',
+    attachment: '/surat-cuti.jpg'
+  },
+];
+
 export const useAttendanceStore = create((set) => ({
   history: generateHistory(),
+  leaves: initialLeaves,
   
   checkIn: (record) => set((state) => ({ 
     history: [record, ...state.history] 
@@ -72,5 +92,9 @@ export const useAttendanceStore = create((set) => ({
     history: state.history.map(item => 
       item.id === id ? { ...item, out: outTime, status: newStatus } : item
     )
+  })),
+
+  addLeave: (leaveRecord) => set((state) => ({
+    leaves: [leaveRecord, ...state.leaves]
   }))
 }));

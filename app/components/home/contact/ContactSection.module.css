@@ -43,13 +43,11 @@
   text-align: center;
 }
 
-/* Layer Base: Outline Putih Tipis */
 .outlineText {
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5); 
 }
 
-/* Layer Top: Fill Warna Putih */
 .fillText {
   position: absolute;
   top: 0;
@@ -69,6 +67,7 @@
   position: absolute;
   z-index: 1; 
   pointer-events: none; 
+  overflow: visible; 
 }
 
 .img {
@@ -77,17 +76,27 @@
   height: auto;
 }
 
-.asset1 { top: -38%; left: -2%; width: 110px; }  
-.asset2 { top: -30%; right: 5%; width: 140px; } 
-.asset3 { top: 20%; left: -12%; width: 240px; } 
-.asset4 { top: 25%; right: -5%; width: 120px; } 
-.asset5 { top: 65%; left: 2%; width: 130px; } 
-.asset6 { top: 65%; right: 5%; width: 120px; } 
+/* POSISI 3 DI KIRI */
+.asset1 { top: -25%; left: -6%; width: 130px; }  
+.asset3 { top: 15%; left: -13%; width: 220px; } 
+.asset5 { top: 80%; left: -2%; width: 130px; }  
+
+/* POSISI 3 DI KANAN */
+.asset2 { top: -15%; right: -5%; width: 150px; } 
+.asset4 { top: 25%; right: -8%; width: 180px; } 
+.asset6 { top: 75%; right: -2%; width: 130px; } 
+
+@media (max-width: 1024px) {
+  .asset3 { width: 160px; left: -10%; }
+  .asset4 { width: 140px; right: -10%; }
+}
 
 @media (max-width: 768px) {
   .asset1, .asset2, .asset3, .asset4, .asset5, .asset6 {
     width: 60px;
     opacity: 0.5;
+    left: auto;
+    right: auto;
   }
 }
 
@@ -132,29 +141,75 @@
   max-width: 90%;
 }
 
-/* Tombol Email dengan Tema Neon */
-.neonButton {
+/* --- TOMBOL HIRE (DESAIN BARU DIPERBAIKI) --- */
+.hireButton {
   align-self: flex-start;
   margin-top: auto;
-  padding: 1rem 2.5rem;
-  background: linear-gradient(90deg, #180029 0%, #b300ff 50%, #ffa67a 100%);
-  color: white;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 1.125rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(179, 0, 255, 0.3);
-  transition: all 0.3s ease;
-  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem; /* Gap disesuaikan agar tidak terlalu renggang */
+  /* Padding disesuaikan dengan ukuran ikon baru (48px) */
+  padding: 0.5rem 2rem 0.5rem 0.5rem; 
+  background: linear-gradient(135deg, #180029 0%, #3b0066 100%);
+  border: 1px solid rgba(255, 166, 122, 0.4);
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(179, 0, 255, 0.2);
+  transition: all 0.4s ease;
+  cursor: pointer;
 }
 
-.neonButton:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 35px rgba(255, 166, 122, 0.5);
+.hireButton:hover {
+  box-shadow: 0 15px 40px rgba(255, 166, 122, 0.3);
+  transform: translateY(-5px);
+  border-color: rgba(255, 166, 122, 0.8);
+}
+
+.hireIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Dikecilkan dari 60px menjadi 48px */
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #ffa67a 0%, #ff7e40 100%);
+  border-radius: 1rem; /* Sudut disesuaikan dengan ukuran baru */
+  color: white;
+  box-shadow: 0 0 15px rgba(255, 166, 122, 0.4); /* Glow disesuaikan */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+.hireIconWrapper svg {
+  /* Ikon sedikit dikecilkan agar pas dalam kotak 48px */
+  width: 22px;
+  height: 22px;
+}
+
+.hireButton:hover .hireIconWrapper {
+  transform: rotate(-15deg) scale(1.1);
+  box-shadow: 0 0 25px rgba(255, 166, 122, 0.8);
+}
+
+.hireTextWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15rem; /* Gap antar teks dirapatkan sedikit */
+}
+
+.hireLabel {
+  color: #a1a1aa;
+  font-size: 0.7rem; /* Disesuaikan agar lebih compact */
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hireTitle {
+  color: #ffffff;
+  font-size: 1.35rem; /* Disesuaikan agar proporsional dengan kotak ikon 48px */
+  font-weight: 800;
+  line-height: 1;
 }
 
 /* Daftar Social Media */
@@ -238,9 +293,18 @@
 /* Responsif untuk Mobile (Layar di bawah 768px) */
 @media (max-width: 768px) {
   .contactSection { padding: 4rem 1.25rem 6rem 1.25rem; }
-  .headerWrapper { margin-bottom: 4rem; padding: 2rem 0; }
-  .title { font-size: 3.5rem; letter-spacing: 4px; }
+  .headerWrapper { margin-bottom: 6rem; padding: 2rem 0; }
+  .title { font-size: 3.5rem;
+    font-weight: 900;  }
   .subtitle { font-size: 1rem; }
+
+    /* Penyesuaian posisi gambar spesifik HP agar menepi dan tidak menabrak teks */
+  .asset1 { top: -30%; left: 0%; width: 45px; opacity: 0.7; }
+  .asset2 { top: -30%; right: 2%; width: 50px; opacity: 0.7; }
+  .asset3 { top: 5%; left: -12%; width: 70px; opacity: 0.4; }
+  .asset4 { top: 20%; right: -6%; width: 50px; opacity: 0.4; }
+  .asset5 { top: 90%; left: 5%; width: 50px; opacity: 0.7; }
+  .asset6 { top: 85%; right: 5%; width: 60px; opacity: 0.7; }
 
   .card {
     padding: 1.75rem;
@@ -250,11 +314,9 @@
   .cardTitle { font-size: 1.75rem; }
   .cardDesc { font-size: 1rem; margin-bottom: 2rem; }
 
-  .neonButton {
+  .hireButton {
     width: 100%;
-    justify-content: center;
-    padding: 0.875rem 1rem;
-    font-size: 1rem;
+    justify-content: flex-start;
   }
 
   .socialList { gap: 1.25rem; }

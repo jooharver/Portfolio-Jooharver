@@ -81,13 +81,20 @@ export default function InventoryApp({ onClose }) {
             Mode Live Demo (Tanpa Login)
           </div>
           
-          <div className="flex items-center gap-3">
-            {/* Tombol Desktop */}
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* Tombol Bell Desktop */}
             <button className="hidden md:flex w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 items-center justify-center text-zinc-400 hover:text-white transition-colors">
               <Bell size={18} />
             </button>
-            <button onClick={onClose} className="hidden md:flex items-center gap-2 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white border border-rose-500/20 px-4 py-2 rounded-full text-sm font-semibold transition-all">
+            
+            {/* Tombol Exit Desktop */}
+            <button onClick={onClose} className="hidden md:flex items-center gap-2 bg-rose-600 text-white hover:bg-rose-500 px-4 py-2 rounded-full text-sm font-semibold transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_20px_rgba(244,63,94,0.5)]">
               <LogOut size={16} /> Exit Live Project
+            </button>
+
+            {/* Tombol Exit Mobile */}
+            <button onClick={onClose} className="md:hidden flex items-center gap-1.5 bg-rose-600 text-white hover:bg-rose-500 px-3 py-2 rounded-lg text-sm font-semibold transition-all shadow-[0_0_10px_rgba(225,29,72,0.3)]">
+              <LogOut size={16} /> Exit
             </button>
 
             {/* Hamburger Button Mobile */}
@@ -96,7 +103,6 @@ export default function InventoryApp({ onClose }) {
               className="md:hidden flex items-center gap-2 px-3 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white text-sm"
             >
               {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-              Menu
             </button>
           </div>
 
@@ -112,8 +118,7 @@ export default function InventoryApp({ onClose }) {
                 <button onClick={() => handleTabSwitch('dashboard')} className={`flex items-center gap-3 px-4 py-3 rounded-xl ${activeTab === 'dashboard' ? 'bg-[#27272a] text-white' : 'text-zinc-400'}`}><LayoutDashboard size={20}/> Dashboard</button>
                 <button onClick={() => handleTabSwitch('items')} className={`flex items-center gap-3 px-4 py-3 rounded-xl ${activeTab === 'items' ? 'bg-[#27272a] text-white' : 'text-zinc-400'}`}><PackageSearch size={20}/> Kelola Barang</button>
                 <button onClick={() => handleTabSwitch('reports')} className={`flex items-center gap-3 px-4 py-3 rounded-xl ${activeTab === 'reports' ? 'bg-[#27272a] text-white' : 'text-zinc-400'}`}><FileBarChart2 size={20}/> Laporan</button>
-                <div className="h-[1px] w-full bg-zinc-800 my-2"></div>
-                <button onClick={onClose} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20 font-semibold"><LogOut size={20}/> Exit Live Project</button>
+                {/* Tombol exit di dropdown dihapus karena sudah ada di top bar */}
               </motion.div>
             )}
           </AnimatePresence>
