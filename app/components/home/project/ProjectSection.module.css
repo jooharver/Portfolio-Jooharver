@@ -76,12 +76,12 @@
   height: auto;
 }
 
-.asset1 { top: -10%; left: 0%; width: 140px; } 
-.asset2 { top: -5%; right: 2%; width: 120px; } 
-.asset3 { top: 70%; left: 5%; width: 100px; } 
-.asset4 { top: 40%; right: 5%; width: 180px; } 
-.asset5 { top: 65%; right: 15%; width: 90px; } 
-.asset6 { display: none; } 
+.asset1 { top: -38%; left: -2%; width: 110px; }  
+.asset2 { top: -30%; right: 5%; width: 140px; } 
+.asset3 { top: 20%; left: -11%; width: 250px; } 
+.asset4 { top: 25%; right: -5%; width: 120px; } 
+.asset5 { top: 65%; left: 2%; width: 130px; } 
+.asset6 { top: 65%; right: 5%; width: 120px; } 
 
 @media (max-width: 768px) {
   .asset1, .asset2, .asset3, .asset4, .asset5 { width: 60px; opacity: 0.5; }

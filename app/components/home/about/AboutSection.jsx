@@ -7,11 +7,11 @@ import styles from "./AboutSection.module.css";
 
 const floatingImages = [
   { id: 1, src: "/gambar1.png", className: styles.asset1, initialX: -150, initialY: -100, rotate: -15, delay: 0.1 },
-  { id: 2, src: "/gambar2.png", className: styles.asset2, initialX: 150, initialY: -50, rotate: 20, delay: 0.3 },
+  { id: 2, src: "/gambar2.png", className: styles.asset2, initialX: 150, initialY: -50, rotate: 20, delay: 0.2 },
   { id: 3, src: "/gambar3.png", className: styles.asset3, initialX: -200, initialY: 50, rotate: -10, delay: 0.2 },
-  { id: 4, src: "/gambar4.png", className: styles.asset4, initialX: 200, initialY: 100, rotate: 15, delay: 0.4 },
-  { id: 5, src: "/gambar5.png", className: styles.asset5, initialX: -100, initialY: 150, rotate: -25, delay: 0.3 },
-  { id: 6, src: "/gambar6.png", className: styles.asset6, initialX: 150, initialY: 150, rotate: 10, delay: 0.5 },
+  { id: 4, src: "/gambar4.png", className: styles.asset4, initialX: 200, initialY: 100, rotate: 15, delay: 0.25 },
+  { id: 5, src: "/gambar5.png", className: styles.asset5, initialX: -100, initialY: 150, rotate: -25, delay: 0.25 },
+  { id: 6, src: "/gambar6.png", className: styles.asset6, initialX: 150, initialY: 150, rotate: 10, delay: 0.3 },
 ];
 
 export default function AboutSection() {
