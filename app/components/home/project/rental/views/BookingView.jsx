@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, ChevronLeft, ShieldCheck, CreditCard, CheckCircle2, CalendarDays, Clock, Map } from 'lucide-react';
@@ -7,6 +7,7 @@ import { useRentalStore } from '../rentalStore';
 // Terima props onGoToRiwayat
 export default function BookingView({ onGoToRiwayat }) {
   const [step, setStep] = useState(1);
+  const containerRef = useRef(null); // KUNCI FIX: Ref untuk container yang di-scroll
   
   const months = [
     { id: 'sep', name: 'September', year: 2026, days: 30, blanks: 2 },
@@ -27,20 +28,31 @@ export default function BookingView({ onGoToRiwayat }) {
   const handleNext = () => setStep(prev => prev + 1);
   const handleBack = () => setStep(prev => prev - 1);
 
+  // KUNCI FIX: Fungsi untuk memaksa scroll ke atas secara instan
+  const scrollToTop = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    }
+  };
+
   return (
-    <div className="w-full min-h-full flex flex-col relative">
+    <div 
+      ref={containerRef} 
+      className="w-full h-full flex flex-col relative overflow-y-auto custom-scrollbar"
+    >
       <AnimatePresence mode="wait">
-        {step === 1 && <Step1Branch branches={branches} setBookingData={setBookingData} onNext={handleNext} key="s1" />}
-        {step === 2 && <Step2Detail data={bookingData} setData={setBookingData} months={months} onBack={handleBack} onNext={handleNext} key="s2" />}
-        {step === 3 && <Step3Invoice data={bookingData} onBack={handleBack} onNext={handleNext} key="s3" />}
-        {step === 4 && <Step4Payment data={bookingData} onBack={handleBack} onNext={handleNext} key="s4" />}
+        {step === 1 && <Step1Branch branches={branches} setBookingData={setBookingData} onNext={handleNext} onRender={scrollToTop} key="s1" />}
+        {step === 2 && <Step2Detail data={bookingData} setData={setBookingData} months={months} onBack={handleBack} onNext={handleNext} onRender={scrollToTop} key="s2" />}
+        {step === 3 && <Step3Invoice data={bookingData} onBack={handleBack} onNext={handleNext} onRender={scrollToTop} key="s3" />}
+        {step === 4 && <Step4Payment data={bookingData} onBack={handleBack} onNext={handleNext} onRender={scrollToTop} key="s4" />}
         {step === 5 && (
           <Step5Success 
             onReset={() => { 
               setStep(1); 
               setBookingData({ branch: null, field: 'Lapangan 1', month: months[0], date: 1, sessions: [] }); 
             }} 
-            onGoToRiwayat={onGoToRiwayat} 
+            onGoToRiwayat={onGoToRiwayat}
+            onRender={scrollToTop}
             key="s5" 
           />
         )}
@@ -49,9 +61,11 @@ export default function BookingView({ onGoToRiwayat }) {
   );
 }
 
-function Step1Branch({ branches, setBookingData, onNext }) {
+function Step1Branch({ branches, setBookingData, onNext, onRender }) {
+  useEffect(() => { onRender(); }, []);
+
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full min-h-full p-6 pb-16">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full p-6 pb-16">
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 relative overflow-hidden shadow-lg">
           <h2 className="text-2xl font-bold text-white mb-2 relative z-10">Selamat Datang di LJ Futsal</h2>
@@ -94,7 +108,9 @@ function Step1Branch({ branches, setBookingData, onNext }) {
   );
 }
 
-function Step2Detail({ data, setData, months, onBack, onNext }) {
+function Step2Detail({ data, setData, months, onBack, onNext, onRender }) {
+  useEffect(() => { onRender(); }, []);
+
   const fields = ['Lapangan 1', 'Lapangan 2', 'Lapangan 3'];
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const timeSlots = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
@@ -133,8 +149,8 @@ function Step2Detail({ data, setData, months, onBack, onNext }) {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full min-h-full flex flex-col">
-      <div className="max-w-4xl mx-auto w-full p-6 space-y-8 pb-10">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full flex flex-col">
+      <div className="max-w-4xl mx-auto w-full p-6 space-y-8 pb-32">
         <div className="flex flex-col gap-4">
           <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 text-sm font-semibold transition-colors w-fit">
             <ChevronLeft size={18} /> Kembali
@@ -226,7 +242,7 @@ function Step2Detail({ data, setData, months, onBack, onNext }) {
         </section>
       </div>
 
-      <div className="sticky bottom-0 left-0 w-full p-6 bg-white/90 backdrop-blur-xl border-t border-slate-200 z-[60] mt-auto shadow-[0_-10px_30px_rgba(0,0,0,0.02)]">
+      <div className="fixed bottom-0 left-0 w-full p-6 bg-white/90 backdrop-blur-xl border-t border-slate-200 z-[60] shadow-[0_-10px_30px_rgba(0,0,0,0.02)]">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-6">
           <div className="hidden sm:block">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estimasi Durasi</p>
@@ -244,12 +260,14 @@ function Step2Detail({ data, setData, months, onBack, onNext }) {
   );
 }
 
-function Step3Invoice({ data, onBack, onNext }) {
+function Step3Invoice({ data, onBack, onNext, onRender }) {
+  useEffect(() => { onRender(); }, []);
+
   const total = data.sessions.length * 150000;
   const sortedSessions = [...data.sessions].sort();
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full min-h-full flex flex-col p-6 pb-20">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full flex flex-col p-6 pb-20">
       <div className="max-w-2xl mx-auto w-full flex flex-col flex-1">
         <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 text-sm font-semibold transition-colors mb-4 w-fit shrink-0">
           <ChevronLeft size={18} /> Kembali
@@ -300,7 +318,9 @@ function Step3Invoice({ data, onBack, onNext }) {
   );
 }
 
-function Step4Payment({ data, onBack, onNext }) {
+function Step4Payment({ data, onBack, onNext, onRender }) {
+  useEffect(() => { onRender(); }, []);
+
   const [loading, setLoading] = useState(false);
   const addBooking = useRentalStore(state => state.addBooking);
   const total = data.sessions.length * 150000;
@@ -334,7 +354,7 @@ function Step4Payment({ data, onBack, onNext }) {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full min-h-full flex flex-col p-6 pb-20">
+    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full flex flex-col p-6 pb-20">
       <div className="max-w-md mx-auto w-full flex flex-col flex-1">
         <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 text-sm font-semibold transition-colors mb-2 w-fit">
           <ChevronLeft size={18} /> Kembali
@@ -376,15 +396,16 @@ function Step4Payment({ data, onBack, onNext }) {
   );
 }
 
-// Terima props onGoToRiwayat untuk dieksekusi saat selesai
-function Step5Success({ onReset, onGoToRiwayat }) {
+function Step5Success({ onReset, onGoToRiwayat, onRender }) {
+  useEffect(() => { onRender(); }, []);
+
   const handleFinish = () => {
     onReset();
     if (onGoToRiwayat) onGoToRiwayat();
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full min-h-full flex flex-col items-center justify-center p-6 pb-20">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full flex flex-col items-center justify-center p-6 pb-20 pt-20">
       <div className="max-w-md mx-auto w-full text-center">
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }} className="w-32 h-32 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
           <CheckCircle2 size={64} className="text-emerald-500" />
@@ -392,9 +413,8 @@ function Step5Success({ onReset, onGoToRiwayat }) {
         <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">Sukses!</h2>
         <p className="text-base text-slate-500 mb-10 font-medium">Reservasi Anda telah terdaftar. Detail booking dapat dilihat di menu Riwayat.</p>
         
-        {/* Tombol akan mereset dan memindahkan tab ke Riwayat */}
         <button onClick={handleFinish} className="w-full bg-slate-900 hover:bg-slate-800 text-white py-5 rounded-[2rem] font-black text-sm uppercase tracking-widest shadow-2xl shadow-slate-200 transition-all">
-          Selesaii
+          Selesai
         </button>
       </div>
     </motion.div>

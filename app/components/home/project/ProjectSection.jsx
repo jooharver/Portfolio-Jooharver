@@ -23,7 +23,7 @@ import MarketplaceApp from "./marketplace/MarketplaceApp";
 const projects = [
   { id: "01", label: "PROJECT", title: "Inventory - Sistem Pengelolaan Stok Barang", Component: InventoryCard },
   { id: "02", label: "PROJECT", title: "Attendance - Aplikasi Absensi dan Perizinan Mobile", Component: AttendanceCard },
-  { id: "03", label: "PROJECT", title: "Rental - Platform Sewa Lapangan", Component: RentalCard },
+  { id: "03", label: "PROJECT", title: "Rental - Platform Sewa Lapangan Online", Component: RentalCard },
   { id: "04", label: "PROJECT", title: "ERP - Sistem Manajemen Logistik", Component: ErpCard },
   { id: "05", label: "PROJECT", title: "Marketplace - Platform Jual Beli Online", Component: MarketplaceCard },
 ];

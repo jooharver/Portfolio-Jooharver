@@ -51,14 +51,17 @@ export default function RentalApp({ onClose }) {
       <motion.div initial={{ y: 50, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 50, scale: 0.95 }} transition={{ duration: 0.3, ease: "easeOut" }} className="w-full h-[100dvh] bg-slate-50 relative overflow-hidden flex flex-col">
         
         {/* TOP BAR */}
-        <header className="px-6 py-4 flex items-center justify-between bg-white border-b border-slate-200 z-50 shrink-0">
+        <header className="px-4 md:px-6 py-4 flex items-center justify-between bg-white border-b border-slate-200 z-50 shrink-0 relative">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white italic">LJ</div>
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-black text-white italic shrink-0">LJ</div>
             <h1 className="text-slate-900 font-bold text-lg tracking-tight hidden sm:block">LJ Futsal</h1>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="relative hidden sm:block" ref={notifRef}>
+          <div className="flex items-center gap-3 md:gap-4">
+            
+            {/* WRAPPER NOTIFIKASI DENGAN REF */}
+            <div className="relative" ref={notifRef}>
+              {/* TOMBOL NOTIFIKASI (Sekarang tampil di mobile juga) */}
               <button 
                 onClick={() => setShowNotif(!showNotif)}
                 className={`relative p-2 rounded-full transition-colors ${showNotif ? 'bg-slate-100 text-blue-600' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'}`}
@@ -67,6 +70,7 @@ export default function RentalApp({ onClose }) {
                 <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white"></span>
               </button>
               
+              {/* CARD NOTIFIKASI (Tengah di Mobile, Kanan di PC) */}
               <AnimatePresence>
                 {showNotif && (
                   <motion.div 
@@ -74,7 +78,7 @@ export default function RentalApp({ onClose }) {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-3 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-[99999]"
+                    className="fixed top-16 left-1/2 -translate-x-1/2 md:absolute md:top-full md:left-auto md:-translate-x-0 md:right-0 mt-3 w-[90vw] md:w-80 max-w-[340px] bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 z-[99999]"
                   >
                     <div className="flex justify-between items-center mb-3 pb-3 border-b border-slate-100">
                       <h4 className="text-sm font-bold text-slate-900">Pemberitahuan</h4>
@@ -107,13 +111,22 @@ export default function RentalApp({ onClose }) {
               </div>
             </div>
             
-            {/* TOMBOL EXIT DIPERBARUI */}
+            {/* TOMBOL EXIT DESKTOP */}
             <button 
               onClick={onClose} 
-              className="flex items-center gap-2 bg-rose-600 text-white hover:bg-rose-500 px-4 py-2 rounded-full font-bold text-sm transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_20px_rgba(244,63,94,0.5)]"
+              className="hidden md:flex items-center gap-2 bg-rose-600 text-white hover:bg-rose-500 px-4 py-2 rounded-full font-bold text-sm transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_20px_rgba(244,63,94,0.5)] shrink-0"
             >
               <X size={16} /> Exit Live Project
             </button>
+            
+            {/* TOMBOL EXIT MOBILE */}
+            <button 
+              onClick={onClose} 
+              className="md:hidden flex items-center gap-1.5 bg-rose-600 text-white hover:bg-rose-500 px-3 py-2 rounded-lg font-bold text-sm transition-all shadow-[0_0_10px_rgba(225,29,72,0.3)] shrink-0"
+            >
+              <X size={16} /> Exit
+            </button>
+
           </div>
         </header>
 

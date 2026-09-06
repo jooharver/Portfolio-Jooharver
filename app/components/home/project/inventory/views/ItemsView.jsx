@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Edit, Trash2, Eye, AlertTriangle, FileText, PackageMinus, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Eye, AlertTriangle, FileText, PackageMinus, ChevronLeft, ChevronRight, CheckCircle, Filter } from 'lucide-react';
 import { useInventoryStore } from '../store/useInventoryStore';
 
 const KATEGORI_OPTIONS = ['Laptop', 'Monitor', 'Komponen PC', 'Aksesoris'];
@@ -17,35 +17,63 @@ const formatNumberInput = (val) => {
 export default function ItemsView() {
   const { items, addItem, updateItem, deleteItem } = useInventoryStore();
   
-  // State untuk Toast Notification
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedTerm, setDebouncedTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // State untuk Fitur Filter Kategori
+  const [selectedCategory, setSelectedCategory] = useState('Semua Kategori');
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const filterRef = useRef(null);
 
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
     setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
   };
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedTerm, setDebouncedTerm] = useState('');
-  
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedTerm(searchTerm), 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  const filteredItems = items.filter(item => 
-    item.name.toLowerCase().includes(debouncedTerm.toLowerCase()) || 
-    item.id.toLowerCase().includes(debouncedTerm.toLowerCase()) ||
-    item.category.toLowerCase().includes(debouncedTerm.toLowerCase())
-  );
+  // Efek untuk menutup dropdown filter jika klik di luarnya
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilterDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // Mengekstrak daftar kategori unik dari data yang ada di Zustand
+  const availableCategories = useMemo(() => {
+    const cats = new Set(items.map(item => item.category));
+    return ['Semua Kategori', ...Array.from(cats)];
+  }, [items]);
+
+  // Logika Filter Ganda: Pencarian (Search) + Dropdown Kategori
+  const filteredItems = useMemo(() => {
+    return items.filter(item => {
+      const matchSearch = item.name.toLowerCase().includes(debouncedTerm.toLowerCase()) || 
+                          item.id.toLowerCase().includes(debouncedTerm.toLowerCase()) ||
+                          item.category.toLowerCase().includes(debouncedTerm.toLowerCase());
+      
+      const matchCategory = selectedCategory === 'Semua Kategori' || item.category === selectedCategory;
+
+      return matchSearch && matchCategory;
+    });
+  }, [items, debouncedTerm, selectedCategory]);
+
   const totalItems = filteredItems.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
 
+  // Reset page ke 1 setiap kali filter atau pencarian berubah
   useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedTerm]);
+  }, [debouncedTerm, selectedCategory]);
 
   const currentItems = filteredItems.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
@@ -138,8 +166,11 @@ export default function ItemsView() {
         </div>
       </div>
 
-      <div className="bg-[#18181b] rounded-2xl border border-zinc-800 overflow-hidden flex flex-col">
-        <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
+      <div className="bg-[#18181b] rounded-2xl border border-zinc-800 flex flex-col shadow-lg">
+        
+        {/* HEADER TABEL: Pencarian & Filter */}
+        <div className="p-4 border-b border-zinc-800 bg-zinc-900/50 flex flex-col md:flex-row gap-3 md:items-center justify-between rounded-t-2xl">
+          
           <div className="relative w-full md:max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
             <input 
@@ -150,24 +181,64 @@ export default function ItemsView() {
               className="w-full bg-[#09090b] border border-zinc-700 text-white rounded-lg pl-10 pr-4 py-2 text-sm md:text-base focus:outline-none focus:border-[#b300ff] transition-colors"
             />
           </div>
+
+          <div className="relative w-full md:w-auto" ref={filterRef}>
+            <button 
+              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+              className="w-full md:w-auto flex items-center justify-between gap-3 px-4 py-2 bg-[#09090b] border border-zinc-700 hover:border-zinc-500 rounded-lg text-sm text-zinc-300 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <Filter size={16} className="text-[#b300ff]" /> 
+                {selectedCategory}
+              </span>
+              <ChevronRight size={16} className={`transform transition-transform ${showFilterDropdown ? 'rotate-90' : ''}`} />
+            </button>
+            
+            <AnimatePresence>
+              {showFilterDropdown && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full mt-2 w-full md:w-48 bg-[#18181b] border border-zinc-700 shadow-2xl rounded-xl overflow-hidden z-50"
+                >
+                  <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                    {availableCategories.map((cat, idx) => (
+                      <button 
+                        key={idx}
+                        onClick={() => { setSelectedCategory(cat); setShowFilterDropdown(false); }}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                          selectedCategory === cat 
+                            ? 'bg-[#27272a] text-white font-bold border-l-2 border-[#b300ff]' 
+                            : 'text-zinc-400 hover:bg-zinc-800 hover:text-white border-l-2 border-transparent'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
         </div>
 
+        {/* BUNGKUSAN TABEL MELENGKUNG */}
         <div className="overflow-x-auto flex-1 custom-scrollbar">
           <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead>
-              <tr className="bg-[#09090b] text-zinc-400 text-xs md:text-sm border-b border-zinc-800">
-                <th className="px-4 md:px-6 py-4">ID Barang</th>
-                <th className="px-4 md:px-6 py-4">Nama Produk</th>
-                <th className="px-4 md:px-6 py-4">Kategori</th>
-                <th className="px-4 md:px-6 py-4">Stok</th>
-                <th className="px-4 md:px-6 py-4">Harga Satuan</th>
-                <th className="px-4 md:px-6 py-4">Status</th>
-                <th className="px-4 md:px-6 py-4 text-center">Aksi</th>
+              <tr className="bg-[#09090b] text-zinc-400 text-xs md:text-sm">
+                <th className="px-4 md:px-6 py-4 font-medium border-b border-zinc-800">ID Barang</th>
+                <th className="px-4 md:px-6 py-4 font-medium border-b border-zinc-800">Nama Produk</th>
+                <th className="px-4 md:px-6 py-4 font-medium border-b border-zinc-800">Kategori</th>
+                <th className="px-4 md:px-6 py-4 font-medium border-b border-zinc-800">Stok</th>
+                <th className="px-4 md:px-6 py-4 font-medium border-b border-zinc-800">Harga Satuan</th>
+                <th className="px-4 md:px-6 py-4 font-medium border-b border-zinc-800">Status</th>
+                <th className="px-4 md:px-6 py-4 font-medium border-b border-zinc-800 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody className="text-xs md:text-sm text-zinc-300">
               {currentItems.length > 0 ? currentItems.map((item) => (
-                <tr key={item.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/20 transition-colors">
+                <tr key={item.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors last:border-0">
                   <td className="px-4 md:px-6 py-4 font-mono text-zinc-400">{item.id}</td>
                   <td className="px-4 md:px-6 py-4 font-medium text-white">{item.name}</td>
                   <td className="px-4 md:px-6 py-4">{item.category}</td>
@@ -192,8 +263,8 @@ export default function ItemsView() {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-zinc-500 text-sm">
-                    Tidak ada data barang yang ditemukan.
+                  <td colSpan="7" className="px-6 py-12 text-center text-zinc-500 text-sm">
+                    {items.length === 0 ? "Belum ada data barang." : "Tidak ada barang yang cocok dengan filter."}
                   </td>
                 </tr>
               )}
@@ -201,7 +272,7 @@ export default function ItemsView() {
           </table>
         </div>
 
-        <div className="p-4 border-t border-zinc-800 bg-zinc-900/30 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="p-4 border-t border-zinc-800 bg-zinc-900/50 flex flex-col sm:flex-row justify-between items-center gap-4 rounded-b-2xl">
           <span className="text-xs md:text-sm text-zinc-400">
             Page <span className="text-white font-medium">{currentPage}/{totalPages}</span> menampilkan <span className="text-white font-medium">{currentItems.length}/{totalItems}</span> barang.
           </span>
@@ -254,7 +325,6 @@ export default function ItemsView() {
               <form onSubmit={handleSubmit} className="p-4 md:p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-4">
-                    {/* INPUT DENGAN PLACEHOLDER */}
                     <div>
                       <label className="block text-xs md:text-sm font-medium text-zinc-400 mb-1">Nama Produk</label>
                       <input 

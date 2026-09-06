@@ -2,18 +2,23 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShoppingCart, Store, User, Bell, LogOut, Package, Inbox } from 'lucide-react';
+import { Search, ShoppingCart, Store, User, Bell, LogOut, Package, Inbox, Menu, X, LayoutDashboard, Box, BarChart2, Truck, Lock } from 'lucide-react';
 import { useMarketplaceStore } from './marketplaceStore';
 
 import ClientView from './views/ClientView';
 import SellerView from './views/SellerView';
 
 export default function MarketplaceApp({ onClose }) {
-  const { cart, setClientView, setSearchQuery } = useMarketplaceStore();
+  const { cart, setClientView, setSearchQuery, currentUser } = useMarketplaceStore();
   const [activeRole, setActiveRole] = useState('client'); 
   
   const [localSearch, setLocalSearch] = useState('');
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // STATE UNTUK NOTIFIKASI MENU TERKUNCI
+  const [lockedToast, setLockedToast] = useState(false);
+  
   const notifRef = useRef();
 
   useEffect(() => {
@@ -38,25 +43,46 @@ export default function MarketplaceApp({ onClose }) {
         setIsNotifOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
+    if (isNotifOpen) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isNotifOpen]);
 
   const handleRoleSwitch = (role) => {
     setActiveRole(role);
+    setIsMobileMenuOpen(false);
     if(role === 'client') {
       setClientView('home');
       setLocalSearch(''); 
     }
   };
 
+  // Fungsi memunculkan peringatan klik pada menu terkunci
+  const handleLockedMenu = () => {
+    setLockedToast(true);
+    setTimeout(() => setLockedToast(false), 3000);
+  };
+
   return (
     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 30 }} transition={{ duration: 0.4 }} className="fixed inset-0 z-[9999999] bg-[#F9F8F6] font-sans flex flex-col overflow-hidden text-[#1C2C24]">
       
+      {/* TOAST POP-UP KETIKA MENU TERKUNCI DIKLIK */}
+      <AnimatePresence>
+        {lockedToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }} 
+            animate={{ opacity: 1, y: 0, scale: 1 }} 
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed top-24 left-1/2 -translate-x-1/2 z-[9999999] flex items-center gap-2 px-4 py-2.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 shadow-xl"
+          >
+            <Lock size={14} className="shrink-0" />
+            <span className="font-bold text-[11px] sm:text-xs whitespace-nowrap">Fitur ini terkunci pada mode live demo</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* TOP BAR */}
-      <div className="bg-[#1C2C24] text-[#C2BBAF] text-[11px] font-medium py-1.5 px-3 md:px-8 flex justify-between items-center z-50">
+      <div className="bg-[#1C2C24] text-[#C2BBAF] text-[11px] font-medium py-1.5 px-3 md:px-8 flex justify-between items-center z-[60] relative">
         <div className="flex gap-4 shrink-0">
-          {/* FIX: Toggle Role 2 Arah */}
           <button 
             onClick={() => handleRoleSwitch(activeRole === 'client' ? 'seller' : 'client')} 
             className="hover:text-[#F4F1EA] transition-colors"
@@ -65,14 +91,21 @@ export default function MarketplaceApp({ onClose }) {
           </button>
         </div>
         
-        <div className="flex gap-3 md:gap-4 items-center relative">
+        <div className="flex gap-3 md:gap-4 items-center relative ml-auto">
+          
           <div ref={notifRef} className="relative">
-            <button onClick={() => setIsNotifOpen(!isNotifOpen)} className="flex items-center gap-1 hover:text-[#F4F1EA] cursor-pointer transition-colors">
+            <button onClick={() => setIsNotifOpen(!isNotifOpen)} className="flex items-center gap-1 hover:text-[#F4F1EA] cursor-pointer transition-colors relative">
               <Bell size={12}/> <span className="hidden sm:inline">Notifikasi</span>
             </button>
             <AnimatePresence>
               {isNotifOpen && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-[#EBEAE5] z-50 p-6 flex flex-col items-center justify-center text-center">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }} 
+                  animate={{ opacity: 1, y: 0, scale: 1 }} 
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="fixed top-12 left-1/2 -translate-x-1/2 md:absolute md:top-full md:left-auto md:-translate-x-0 md:right-0 mt-2 w-[90vw] md:w-72 max-w-[340px] bg-white rounded-xl shadow-2xl border border-[#EBEAE5] z-[99999] p-6 flex flex-col items-center justify-center text-center"
+                >
                   <div className="w-12 h-12 bg-[#F4F1EA] rounded-full flex items-center justify-center text-[#9BA8A1] mb-3"><Inbox size={20}/></div>
                   <h4 className="font-bold text-[#1C2C24] text-sm">Tidak ada pemberitahuan</h4>
                   <p className="text-xs text-[#78857E] mt-1">Pemberitahuan terbaru akan muncul di sini.</p>
@@ -81,21 +114,18 @@ export default function MarketplaceApp({ onClose }) {
             </AnimatePresence>
           </div>
 
-          {/* FIX: Pesanan Saya Dimunculkan di Mobile */}
-          <button onClick={() => { handleRoleSwitch('client'); setClientView('orders'); }} className="flex items-center gap-1 hover:text-[#F4F1EA] cursor-pointer transition-colors text-center leading-tight">
+          <button onClick={() => { handleRoleSwitch('client'); setClientView('orders'); }} className={`flex items-center gap-1 hover:text-[#F4F1EA] cursor-pointer transition-colors text-center leading-tight ${activeRole === 'seller' ? 'hidden md:flex' : 'flex'}`}>
             <Package size={12} className="shrink-0"/> 
             <span className="hidden sm:inline">Pesanan Saya</span>
             <span className="sm:hidden text-[10px]">Pesanan<br/>Saya</span>
           </button>
           
-          <span className="text-[#5C6E63]">|</span>
+          <span className="text-[#5C6E63] hidden md:inline">|</span>
           
-          {/* TOMBOL EXIT DESKTOP */}
           <button onClick={onClose} className="hidden md:flex font-bold text-white bg-rose-600 hover:bg-rose-500 px-3 py-1.5 rounded-md items-center gap-1 transition-all shadow-[0_0_10px_rgba(225,29,72,0.3)] shrink-0">
             <LogOut size={12}/> Exit Live Project
           </button>
           
-          {/* TOMBOL EXIT MOBILE (Teks Lebih Singkat) */}
           <button onClick={onClose} className="md:flex hidden font-bold text-white bg-rose-600 hover:bg-rose-500 px-2.5 py-1.5 rounded-[4px] items-center gap-1 transition-all shadow-[0_0_10px_rgba(225,29,72,0.3)] shrink-0" style={{ display: 'flex' }}>
             <LogOut size={12} className="md:hidden"/> 
             <span className="md:hidden">Exit</span>
@@ -104,15 +134,16 @@ export default function MarketplaceApp({ onClose }) {
       </div>
 
       {/* MAIN NAVBAR */}
-      <header className="bg-white h-20 flex items-center px-4 md:px-8 gap-4 md:gap-8 border-b border-[#EBEAE5] z-50 sticky top-0 shadow-sm">
+      <header className="bg-white h-20 flex items-center px-4 md:px-8 gap-4 md:gap-8 border-b border-[#EBEAE5] z-50 sticky top-0 shadow-sm relative shrink-0">
         
-        {/* EFEK HOVER SCALE PADA LOGO */}
         <div className="flex items-center gap-2 text-[#1C2C24] shrink-0 cursor-pointer hover:scale-105 transition-transform origin-left" onClick={() => { handleRoleSwitch('client'); setLocalSearch(''); }}>
           <ShoppingBagIcon size={32} className="shrink-0" />
-          <span className="font-black text-2xl tracking-tight hidden md:block uppercase">NEXUS<span className="font-light text-[#5C6E63]">MALL</span></span>
+          <span className={`font-black text-2xl tracking-tight uppercase ${activeRole === 'seller' ? 'block' : 'hidden md:block'}`}>
+            NEXUS<span className="font-light text-[#5C6E63]">MALL</span>
+          </span>
         </div>
 
-        <div className="flex-1 max-w-4xl relative min-w-0"> 
+        <div className={`flex-1 max-w-4xl relative min-w-0 ${activeRole === 'seller' ? 'hidden md:block' : 'block'}`}> 
           <input 
             type="text" 
             value={localSearch}
@@ -126,7 +157,7 @@ export default function MarketplaceApp({ onClose }) {
           </button>
         </div>
 
-        <div className="flex items-center gap-4 md:gap-5 text-[#5C6E63] shrink-0">
+        <div className={`flex items-center gap-4 md:gap-5 text-[#5C6E63] shrink-0 ${activeRole === 'seller' ? 'hidden md:flex' : 'flex'}`}>
           <div className="relative cursor-pointer hover:text-[#1C2C24] transition-colors" onClick={() => { handleRoleSwitch('client'); setClientView('cart'); }}>
             <ShoppingCart size={24} />
             {cart.length > 0 && <span className="absolute -top-1.5 -right-2 bg-[#9B7E5D] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">{cart.length}</span>}
@@ -140,16 +171,118 @@ export default function MarketplaceApp({ onClose }) {
           
           <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#F4F1EA] flex items-center justify-center border border-[#EBEAE5] cursor-pointer text-[#5C6E63] hover:text-[#1C2C24] transition-colors shrink-0"><User size={18} /></div>
         </div>
+
+        {activeRole === 'seller' && (
+          <div className="md:hidden ml-auto flex items-center">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 border border-[#EBEAE5] rounded-lg text-[#1C2C24] bg-[#F4F1EA] hover:bg-[#EBEAE5] transition-colors">
+               {isMobileMenuOpen ? <X size={20}/> : <Menu size={20}/>}
+            </button>
+          </div>
+        )}
+
+        <AnimatePresence>
+          {activeRole === 'seller' && isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+              className="absolute top-full left-0 w-full bg-white border-b border-[#EBEAE5] shadow-2xl z-40 flex flex-col p-5 gap-3 md:hidden"
+            >
+              <div className="p-3.5 bg-[#F4F1EA] rounded-xl text-[#1C2C24] font-bold text-sm flex items-center gap-3">
+                <LayoutDashboard size={18}/> Dashboard
+              </div>
+              {/* TOMBOL MENU TERKUNCI (MOBILE) */}
+              <button onClick={handleLockedMenu} className="w-full text-left p-3.5 bg-white text-[#9BA8A1] rounded-xl font-bold text-sm flex items-center gap-3 border border-[#EBEAE5] hover:bg-slate-50 transition-colors">
+                <Box size={18}/> Kelola Stok <Lock size={14} className="ml-auto"/>
+              </button>
+              <button onClick={handleLockedMenu} className="w-full text-left p-3.5 bg-white text-[#9BA8A1] rounded-xl font-bold text-sm flex items-center gap-3 border border-[#EBEAE5] hover:bg-slate-50 transition-colors">
+                <BarChart2 size={18}/> Statistik Penjualan <Lock size={14} className="ml-auto"/>
+              </button>
+              <button onClick={handleLockedMenu} className="w-full text-left p-3.5 bg-white text-[#9BA8A1] rounded-xl font-bold text-sm flex items-center gap-3 border border-[#EBEAE5] hover:bg-slate-50 transition-colors">
+                <Truck size={18}/> Pengiriman <Lock size={14} className="ml-auto"/>
+              </button>
+              
+              <p className="text-[10px] text-[#78857E] text-center mt-2 mb-2 italic">Beberapa fitur terkunci di versi demo</p>
+
+              <button 
+                onClick={() => handleRoleSwitch('client')} 
+                className="mt-2 w-full p-4 bg-[#1C2C24] hover:bg-[#2A4034] text-white rounded-xl font-bold text-sm flex justify-center items-center gap-2 transition-colors shadow-lg shadow-black/10"
+              >
+                <ShoppingBagIcon size={18}/> Kembali ke Mode Belanja
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
-      <main className="flex-1 flex overflow-y-auto custom-scrollbar bg-[#F9F8F6] relative">
-        <AnimatePresence mode="wait">
-          {activeRole === 'client' 
-            ? <motion.div key="client" className="w-full" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}}><ClientView /></motion.div> 
-            : <motion.div key="seller" className="w-full flex" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}}><SellerView /></motion.div>
-          }
+      {/* STRUKTUR SIDEBAR */}
+      <div className="flex-1 flex overflow-hidden relative">
+        
+        {/* SIDEBAR NAVIGATION (Desktop Only) */}
+        <AnimatePresence>
+          {activeRole === 'seller' && (
+            <motion.aside 
+              initial={{ x: -300, opacity: 0 }} 
+              animate={{ x: 0, opacity: 1 }} 
+              exit={{ x: -300, opacity: 0 }} 
+              transition={{ duration: 0.3 }}
+              /* FIX: Menghapus overflow-y-auto agar tooltip hitam tidak terpotong */
+              className="hidden lg:flex w-64 bg-white border-r border-[#EBEAE5] flex-col shrink-0 h-full z-10"
+            >
+              <div className="p-6 border-b border-[#EBEAE5] shrink-0">
+                <h2 className="text-xl font-black text-[#1C2C24] uppercase tracking-tight">Mode Seller</h2>
+                <p className="text-xs font-bold text-[#5C6E63] mt-1">{currentUser?.shopName || "Nexus Fashion Official"}</p>
+              </div>
+              
+              <nav className="flex-1 p-4 space-y-3">
+                <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm bg-[#F4F1EA] text-[#1C2C24] border border-[#EBEAE5] shadow-sm">
+                  <LayoutDashboard size={18}/> Dashboard
+                </button>
+                
+                {/* MENU TERKUNCI DENGAN TOOLTIP (PC) DAN ONCLICK (TOAST) */}
+                <div className="relative group">
+                  <button onClick={handleLockedMenu} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-[#9BA8A1] bg-white border border-transparent hover:bg-slate-50 transition-colors">
+                    <Box size={18}/> Kelola Stok
+                    <Lock size={14} className="ml-auto text-[#C2BBAF]"/>
+                  </button>
+                  <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-max bg-[#1C2C24] text-white text-[10px] px-3 py-2 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none shadow-xl">
+                    Fitur ini terkunci pada mode live demo
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <button onClick={handleLockedMenu} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-[#9BA8A1] bg-white border border-transparent hover:bg-slate-50 transition-colors">
+                    <BarChart2 size={18}/> Statistik Penjualan
+                    <Lock size={14} className="ml-auto text-[#C2BBAF]"/>
+                  </button>
+                  <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-max bg-[#1C2C24] text-white text-[10px] px-3 py-2 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none shadow-xl">
+                    Fitur ini terkunci pada mode live demo
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <button onClick={handleLockedMenu} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-[#9BA8A1] bg-white border border-transparent hover:bg-slate-50 transition-colors">
+                    <Truck size={18}/> Pengiriman
+                    <Lock size={14} className="ml-auto text-[#C2BBAF]"/>
+                  </button>
+                  <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-max bg-[#1C2C24] text-white text-[10px] px-3 py-2 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 pointer-events-none shadow-xl">
+                    Fitur ini terkunci pada mode live demo
+                  </div>
+                </div>
+              </nav>
+            </motion.aside>
+          )}
         </AnimatePresence>
-      </main>
+
+        {/* SCROLLABLE MAIN CONTENT */}
+        <main className="flex-1 overflow-y-auto custom-scrollbar bg-[#F9F8F6] relative">
+          <AnimatePresence mode="wait">
+            {activeRole === 'client' 
+              ? <motion.div key="client" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}}><ClientView /></motion.div> 
+              : <motion.div key="seller" initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}}><SellerView /></motion.div>
+            }
+          </AnimatePresence>
+        </main>
+      </div>
+
     </motion.div>
   );
 }

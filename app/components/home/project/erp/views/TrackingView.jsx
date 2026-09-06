@@ -70,7 +70,7 @@ export default function TrackingView() {
       branchId: newOrder.branchId,
       qty: Number(newOrder.qty),
       status: 'IN_TRANSIT',
-      date: 'Hari Ini', // Bisa diganti logic relative date bila perlu
+      date: 'Hari Ini', 
       tracking: trackNodes
     };
 
@@ -154,17 +154,17 @@ export default function TrackingView() {
               </div>
             </div>
 
-            <div className="bg-white border border-slate-300 rounded-2xl shadow-sm">
+            {/* TABEL DIPERBAIKI: Penambahan overflow-hidden agar sudut melengkung */}
+            <div className="bg-white border border-slate-300 rounded-2xl shadow-sm overflow-hidden flex flex-col">
               <div className="overflow-x-auto custom-scrollbar">
                 <table className="w-full text-left border-collapse min-w-[800px]">
                   <thead>
                     <tr className="bg-slate-900 text-[10px] font-black text-slate-300 uppercase tracking-widest">
-                      <th className="p-4">No. PO</th>
+                      <th className="p-4 first:rounded-tl-2xl">No. PO</th>
                       <th className="p-4">Barang</th>
                       <th className="p-4">Tujuan Cabang</th>
                       <th className="p-4">Tgl Order</th>
-                      {/* PEMBERIAN KELAS whitespace-nowrap AGAR STATUS TIDAK TERPOTONG KE BAWAH */}
-                      <th className="p-4 whitespace-nowrap">Status</th>
+                      <th className="p-4 whitespace-nowrap last:rounded-tr-2xl">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -177,7 +177,7 @@ export default function TrackingView() {
                         const isMyTask = activePendingNode && currentUser.authorizedLocations.includes(activePendingNode.location);
 
                         return (
-                          <tr key={o.id} onClick={() => setSelectedOrder(fullOrder)} className={`border-b border-slate-200 cursor-pointer transition-colors group ${isMyTask ? 'bg-blue-50/50 hover:bg-blue-100/60' : 'odd:bg-white even:bg-slate-50 hover:bg-slate-100'}`}>
+                          <tr key={o.id} onClick={() => setSelectedOrder(fullOrder)} className={`border-b border-slate-200 cursor-pointer transition-colors group ${isMyTask ? 'bg-blue-50/50 hover:bg-blue-100/60' : 'odd:bg-white even:bg-slate-50 hover:bg-slate-100'} last:border-0`}>
                             <td className="p-4 font-bold text-slate-900 text-sm whitespace-nowrap">{o.id}</td>
                             <td className="p-4">
                               <p className="text-sm font-bold text-slate-800">{fullOrder.item?.name}</p>
@@ -190,7 +190,6 @@ export default function TrackingView() {
                               </div>
                             </td>
                             <td className="p-4 text-sm font-medium text-slate-600">{o.date}</td>
-                            {/* PEMBERIAN KELAS whitespace-nowrap PADA SEL DAN BADGE */}
                             <td className="p-4 whitespace-nowrap">
                               <span className={`inline-block text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest border whitespace-nowrap ${o.status === 'DELIVERED' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-300'}`}>
                                 {o.status.replace('_', ' ')}
@@ -205,7 +204,7 @@ export default function TrackingView() {
               </div>
               
               {filteredOrders.length > 0 && (
-                <div className="p-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-4 rounded-b-2xl">
+                <div className="p-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
                   <span className="text-xs font-bold text-slate-500">
                     Menampilkan <span className="text-slate-900">{paginatedOrders.length}</span> dari <span className="text-slate-900">{filteredOrders.length}</span> pengiriman
                   </span>
