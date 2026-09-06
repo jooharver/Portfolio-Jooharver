@@ -46,7 +46,7 @@ export default function AttendanceCard({ onClick }) {
       <motion.div 
         animate={{ y: [0, -10, 0] }}
         transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        className="absolute top-[15%] right-[5%] md:right-[5%] z-20 flex items-center gap-2 bg-[#18181b]/80 border border-emerald-500/50 px-3 md:px-4 py-2 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] backdrop-blur-md group-hover:opacity-0 transition-opacity duration-300"
+        className="absolute top-[20%] right-[10%] md:top-[15%] md:right-[5%] z-20 flex items-center gap-2 bg-[#18181b]/80 border border-emerald-500/50 px-3 md:px-4 py-2 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] backdrop-blur-md group-hover:opacity-0 transition-opacity duration-300"
       >
         <ScanFace size={16} className="text-emerald-400" />
         <span className="text-[10px] md:text-xs font-semibold text-white tracking-wide">Face Verification</span>
@@ -55,7 +55,7 @@ export default function AttendanceCard({ onClick }) {
       <motion.div 
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-[15%] left-[5%] md:left-[5%] z-20 flex items-center gap-2 bg-[#18181b]/80 border border-blue-500/50 px-3 md:px-4 py-2 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.4)] backdrop-blur-md group-hover:opacity-0 transition-opacity duration-300"
+        className="absolute bottom-[20%] left-[10%] md:bottom-[15%] md:left-[5%] z-20 flex items-center gap-2 bg-[#18181b]/80 border border-blue-500/50 px-3 md:px-4 py-2 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.4)] backdrop-blur-md group-hover:opacity-0 transition-opacity duration-300"
       >
         <MapPin size={16} className="text-blue-400" />
         <span className="text-[10px] md:text-xs font-semibold text-white tracking-wide">Live Location</span>
@@ -64,7 +64,7 @@ export default function AttendanceCard({ onClick }) {
       <motion.div 
         animate={{ y: [0, -8, 0] }}
         transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
-        className="absolute bottom-[40%] right-[5%] md:right-[5%] z-20 flex items-center gap-2 bg-[#18181b]/80 border border-amber-500/50 px-3 md:px-4 py-2 rounded-full shadow-[0_0_20px_rgba(245,158,11,0.4)] backdrop-blur-md group-hover:opacity-0 transition-opacity duration-300"
+        className="absolute bottom-[45%] right-[10%] md:bottom-[40%] md:right-[5%] z-20 flex items-center gap-2 bg-[#18181b]/80 border border-amber-500/50 px-3 md:px-4 py-2 rounded-full shadow-[0_0_20px_rgba(245,158,11,0.4)] backdrop-blur-md group-hover:opacity-0 transition-opacity duration-300"
       >
         <Activity size={16} className="text-amber-400" />
         <span className="text-[10px] md:text-xs font-semibold text-white tracking-wide">Real-time Tracker</span>

@@ -42,8 +42,7 @@ export default function DashboardView() {
   const lowStock = items.filter(i => i.stock < 5).length;
 
   return (
-    // Menggunakan h-full dan flex-col agar pas layar tanpa scroll
-    <div className="h-full flex flex-col gap-4 md:gap-6">
+    <div className="h-full flex flex-col gap-4 md:gap-6 pb-20 md:pb-0">
       <h2 className="text-xl md:text-2xl font-bold text-white shrink-0">Dashboard Overview</h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
@@ -67,18 +66,19 @@ export default function DashboardView() {
         ))}
       </div>
 
-      {/* Kontainer grafik mengambil sisa ruang (flex-1) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 flex-1 min-h-0">
-        <div className="bg-[#18181b] p-4 md:p-6 rounded-2xl border border-zinc-800 lg:col-span-2 flex flex-col">
+        
+        {/* LINE CHART */}
+        <div className="bg-[#18181b] p-4 md:p-6 rounded-2xl border border-zinc-800 lg:col-span-2 flex flex-col min-w-0">
           <h3 className="text-base md:text-lg font-semibold text-white mb-4 shrink-0">Aktivitas Arus Barang (7 Hari)</h3>
-          <div className="flex-1 w-full min-h-[200px]">
+          <div className="flex-1 w-full min-h-[250px] md:min-h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
-                <XAxis dataKey="name" stroke="#a1a1aa" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
-                <YAxis stroke="#a1a1aa" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                <XAxis dataKey="name" stroke="#a1a1aa" axisLine={false} tickLine={false} tick={{ fontSize: 10, dy: 10 }} />
+                <YAxis stroke="#a1a1aa" axisLine={false} tickLine={false} tick={{ fontSize: 10 }} />
                 <RechartsTooltip contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.75rem' }} itemStyle={{ color: '#fff' }} />
-                <Legend wrapperStyle={{ fontSize: '12px' }} />
+                <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
                 <Line type="monotone" name="Barang Masuk" dataKey="masuk" stroke="#b300ff" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
                 <Line type="monotone" name="Barang Keluar" dataKey="keluar" stroke="#ffa67a" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
               </LineChart>
@@ -86,25 +86,27 @@ export default function DashboardView() {
           </div>
         </div>
 
-        <div className="bg-[#18181b] p-4 md:p-6 rounded-2xl border border-zinc-800 lg:col-span-1 flex flex-col">
+        {/* PIE CHART */}
+        <div className="bg-[#18181b] p-4 md:p-6 rounded-2xl border border-zinc-800 lg:col-span-1 flex flex-col min-w-0">
           <h3 className="text-base md:text-lg font-semibold text-white mb-4 shrink-0">Proporsi Stok per Kategori</h3>
-          <div className="flex-1 w-full min-h-[200px]">
+          <div className="flex-1 w-full min-h-[250px] md:min-h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart margin={{ top: 10, right: 20, left: 20, bottom: 10 }}>
+              <PieChart margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
                 <Pie 
                   data={pieData} 
                   cx="50%" 
-                  cy="50%" 
-                  innerRadius={50} 
-                  outerRadius={80} 
+                  cy="45%" 
+                  innerRadius="40%" 
+                  outerRadius="60%" 
                   paddingAngle={5} 
                   dataKey="value"
-                  labelLine={{ stroke: '#52525b' }} 
+                  labelLine={{ stroke: '#52525b', strokeWidth: 1 }} 
                   label={({ value }) => `${value} unit`}
-                  style={{ fontSize: '12px', fontWeight: '500' }} 
+                  /* FIX: Menghapus properti fill agar warna asli tidak tertimpa abu-abu */
+                  style={{ fontSize: '10px', fontWeight: '500' }} 
                 >
                   {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="rgba(0,0,0,0.5)" strokeWidth={2} />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="transparent" />
                   ))}
                 </Pie>
                 <RechartsTooltip 
@@ -112,11 +114,12 @@ export default function DashboardView() {
                   itemStyle={{ color: '#fff' }} 
                   formatter={(value) => [`${value} unit`, 'Stok']} 
                 />
-                <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '12px' }}/>
+                <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '10px', marginTop: '10px' }}/>
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
+
       </div>
     </div>
   );
