@@ -7,12 +7,12 @@ import styles from "./AboutSection.module.css";
 
 // Posisi gambar melayang (Sudah disesuaikan agar aman di mobile)
 const floatingImages = [
-  { id: 1, src: "/gambar1.png", className: styles.asset1, initialX: -30, initialY: -30, rotate: -15, delay: 0.1 },
-  { id: 2, src: "/gambar2.png", className: styles.asset2, initialX: 30, initialY: -15, rotate: 20, delay: 0.2 },
-  { id: 3, src: "/gambar3.png", className: styles.asset3, initialX: -40, initialY: 15, rotate: -10, delay: 0.2 },
-  { id: 4, src: "/gambar4.png", className: styles.asset4, initialX: 40, initialY: 30, rotate: 15, delay: 0.25 },
-  { id: 5, src: "/gambar5.png", className: styles.asset5, initialX: -30, initialY: 40, rotate: -25, delay: 0.25 },
-  { id: 6, src: "/gambar6.png", className: styles.asset6, initialX: 30, initialY: 40, rotate: 10, delay: 0.3 },
+  { id: 1, src: "/gambar7.png", className: styles.asset1, initialX: -30, initialY: -30, rotate: -15, delay: 0.1 },
+  { id: 2, src: "/gambar8.png", className: styles.asset2, initialX: 30, initialY: -15, rotate: 20, delay: 0.2 },
+  { id: 3, src: "/gambar9.png", className: styles.asset3, initialX: -40, initialY: 15, rotate: -10, delay: 0.2 },
+  { id: 4, src: "/gambar10.png", className: styles.asset4, initialX: 40, initialY: 30, rotate: 15, delay: 0.25 },
+  { id: 5, src: "/gambar12.png", className: styles.asset5, initialX: -30, initialY: 40, rotate: -25, delay: 0.25 },
+  { id: 6, src: "/gambar11.png", className: styles.asset6, initialX: 30, initialY: 40, rotate: 10, delay: 0.3 },
 ];
 
 export default function AboutSection() {

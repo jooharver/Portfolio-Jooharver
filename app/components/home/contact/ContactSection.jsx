@@ -6,12 +6,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import styles from "./ContactSection.module.css";
 
 const floatingImages = [
-  { id: 1, src: "/gambar1.png", className: styles.asset1, initialX: -50, initialY: -50, rotate: -15, delay: 0.1 },
-  { id: 2, src: "/gambar2.png", className: styles.asset2, initialX: 50, initialY: -20, rotate: 20, delay: 0.2 },
-  { id: 3, src: "/gambar3.png", className: styles.asset3, initialX: -100, initialY: 20, rotate: -10, delay: 0.2 },
-  { id: 4, src: "/gambar4.png", className: styles.asset4, initialX: 100, initialY: 50, rotate: 15, delay: 0.25 },
-  { id: 5, src: "/gambar5.png", className: styles.asset5, initialX: -50, initialY: 80, rotate: -25, delay: 0.25 },
-  { id: 6, src: "/gambar6.png", className: styles.asset6, initialX: 50, initialY: 80, rotate: 10, delay: 0.3 },
+  { id: 1, src: "/gambar13.png", className: styles.asset1, initialX: -50, initialY: -50, rotate: -15, delay: 0.1 },
+  { id: 2, src: "/gambar14.png", className: styles.asset2, initialX: 50, initialY: -20, rotate: 20, delay: 0.2 },
+  { id: 3, src: "/gambar17.png", className: styles.asset3, initialX: -100, initialY: 20, rotate: -10, delay: 0.2 },
+  { id: 4, src: "/gambar18.png", className: styles.asset4, initialX: 100, initialY: 50, rotate: 15, delay: 0.25 },
+  { id: 5, src: "/gambar15.png", className: styles.asset5, initialX: -50, initialY: 80, rotate: -10, delay: 0.25 },
+  { id: 6, src: "/gambar16.png", className: styles.asset6, initialX: 50, initialY: 80, rotate: 10, delay: 0.3 },
 ];
 
 export default function ContactSection() {
@@ -74,7 +74,7 @@ export default function ContactSection() {
         >
           <h3 className={styles.cardTitle}>Mari bangun ekosistem digital bersama.</h3>
           <p className={styles.cardDesc}>
-            Saya selalu terbuka untuk mendiskusikan peluang baru dalam pengembangan web modern dan arsitektur sistem skala besar.
+            Saya selalu terbuka untuk mendiskusikan peluang baru dalam pengembangan web, aplikasi mobile, dan solusi teknologi lainnya.
           </p>
           
           <a href="mailto:ekakrisnaferian@gmail.com" className={styles.hireButton}>
