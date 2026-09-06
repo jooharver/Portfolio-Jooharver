@@ -44,7 +44,7 @@ export default function RentalCard({ onClick }) {
       <motion.div 
         animate={{ y: [0, -10, 0] }}
         transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        className="absolute top-[10%] right-[5%] md:right-[5%] z-20 flex items-center gap-2 bg-[#18181b]/80 border border-teal-500/50 px-3 md:px-4 py-2 rounded-full shadow-[0_0_20px_rgba(20,184,166,0.4)] backdrop-blur-md group-hover:opacity-0 transition-opacity duration-300"
+        className="absolute top-[15%] right-[5%] md:right-[5%] z-20 flex items-center gap-2 bg-[#18181b]/80 border border-teal-500/50 px-3 md:px-4 py-2 rounded-full shadow-[0_0_20px_rgba(20,184,166,0.4)] backdrop-blur-md group-hover:opacity-0 transition-opacity duration-300"
       >
         <CalendarClock size={16} className="text-teal-400" />
         <span className="text-[10px] md:text-xs font-semibold text-white tracking-wide">Smart Booking</span>

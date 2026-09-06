@@ -10,6 +10,98 @@
   overflow-y: visible; 
 }
 
+/* --- MODAL PERINGATAN --- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999999;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modalContent {
+  position: relative;
+  background-color: #09090b;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center; /* Tombol dan konten inti tetap center */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(255,255,255,0.05);
+}
+
+.closeModalBtn {
+  position: absolute;
+  top: 1rem; /* Sedikit ditarik ke atas agar tidak bentrok */
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.closeModalBtn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.modalTitle {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-top: 0.5rem; /* Menjauhkan teks dari batas atas modal & tombol X */
+  margin-bottom: 1rem;
+  font-family: sans-serif;
+  padding: 0 1.5rem; /* Memberikan ruang ekstra di kiri-kanan agar teks tidak menabrak X */
+}
+
+.modalDesc {
+  color: #a1a1aa;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  text-align: justify; /* FIX: Teks sekarang rata kiri dan kanan */
+}
+
+.modalDesc strong {
+  color: #ffffff;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: center;
+}
+
+.btnUnderstand {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnUnderstand:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
 /* AREA HEADER & ASET MELAYANG */
 .headerWrapper {
   position: relative;
@@ -68,7 +160,6 @@
   position: absolute;
   z-index: 1; 
   pointer-events: none; 
-  /* PASTIKAN BARIS INI ADA */
   overflow: visible;
 }
 
@@ -91,17 +182,14 @@
   display: flex;
   flex-direction: column;
   gap: 15rem; 
-  padding-bottom: 25vh; 
-  padding-bottom: 25svh; /* FIX JITTER MOBILE */
+  padding-bottom: 25svh; 
   max-width: 1200px; 
   margin: 0 auto;
 }
 
-/* KUNCI STACKING BERJENJANG */
 .cardStickyWrapper {
   position: sticky;
-  height: 75vh; 
-  height: 75svh; /* FIX JITTER MOBILE */
+  height: 75svh; 
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -117,8 +205,6 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 -8px 25px rgba(0,0,0,0.5); 
-  
-  /* FIX JITTER MOBILE KUNCI UTAMA: Hardware Acceleration (Memaksa rendering pakai GPU) */
   transform: translateZ(0);
   will-change: transform;
 }
@@ -210,7 +296,9 @@
   height: 100% !important;
   max-height: 100% !important;
   margin: 0 !important;
-  object-fit: cover !important; 
+  object-fit: contain !important; 
+  transform: scale(0.95); 
+  transform-origin: center center;
 }
 
 /* Responsif untuk Tablet */
@@ -218,8 +306,8 @@
   .projectSection { padding: 6rem 3vw 0 3vw; }
   .title { font-size: 7rem; letter-spacing: 6px; }
   .headerWrapper { margin-bottom: 6rem; margin-top: 10rem; padding: 2rem 0; }
-  .cardsContainer { gap: 10rem; padding-bottom: 25vh; padding-bottom: 25svh; }
-  .cardStickyWrapper { height: 70vh; height: 70svh; }
+  .cardsContainer { gap: 10rem; padding-bottom: 25svh; }
+  .cardStickyWrapper { height: 70svh; }
   .cardHeader { padding: 2rem 2rem 1rem 2rem; }
   .cardNumber { font-size: 2.5rem; }
   .cardBody { padding: 0 2rem 2rem 2rem; }
@@ -234,12 +322,10 @@
     font-size: 3.5rem;
     font-weight: 900; 
     letter-spacing: 0; 
-    
   }
   
   .headerWrapper { margin-top: 8rem; margin-bottom: 4rem; padding: 2rem 0; }
   
-  /* Penyesuaian posisi gambar spesifik HP agar menepi dan tidak menabrak teks */
   .asset1 { top: -10%; left: 0%; width: 35px; opacity: 0.7; }
   .asset2 { top: -10%; right: 0%; width: 40px; opacity: 0.7; }
   .asset3 { top: 0%; left: -10%; width: 50px; opacity: 0.4; }
@@ -247,18 +333,24 @@
   .asset5 { top: 50%; left: -10%; width: 40px; opacity: 0.7; }
   .asset6 { top: 50%; right: -10%; width: 40px; opacity: 0.7; }
 
-  .cardsContainer { gap: 8rem; padding-bottom: 25vh; padding-bottom: 25svh; }
-  .cardStickyWrapper { height: 65vh; height: 65svh; }
+  .cardsContainer { gap: 8rem; padding-bottom: 25svh; }
+  .cardStickyWrapper { height: 65svh; }
   
   .cardInner { height: 100%; border-radius: 1.25rem; }
   
   .cardBody { padding: 0 1.25rem 1.5rem 1.25rem; }
   .mockupWrapper { border-radius: 1rem !important; }
-  .mockupWrapper > * { object-fit: cover !important; }
+  
+  .mockupWrapper > * { 
+    object-fit: contain !important; 
+    transform: scale(0.95); 
+  }
   
   .cardHeader { flex-direction: column; align-items: flex-start; gap: 1.25rem; padding: 1.5rem; }
   .cardNumber { font-size: 2rem; }
   .cardLabel { font-size: 0.65rem; }
   .cardTitle { font-size: 1rem; }
   .tryButton { width: 100%; text-align: center; padding: 0.75rem 1rem; }
+  
+  .modalContent { padding: 2rem 1.5rem; max-width: 90%; }
 }

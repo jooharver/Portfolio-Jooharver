@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 import styles from "./ProjectSection.module.css";
 
 // Import Kartu Mockup
@@ -19,16 +20,14 @@ import RentalApp from "./rental/RentalApp";
 import ErpApp from "./erp/ErpApp"; 
 import MarketplaceApp from "./marketplace/MarketplaceApp"; 
 
-// Struktur data
 const projects = [
-  { id: "01", label: "PROJECT", title: "Inventory System", Component: InventoryCard },
-  { id: "02", label: "PROJECT", title: "Mobile Attendance", Component: AttendanceCard },
-  { id: "03", label: "PROJECT", title: "Field Rental & Payment", Component: RentalCard },
-  { id: "04", label: "PROJECT", title: "ERP Dashboard", Component: ErpCard },
-  { id: "05", label: "PROJECT", title: "Fashion Marketplace", Component: MarketplaceCard },
+  { id: "01", label: "PROJECT", title: "Inventory - Sistem Pengelolaan Stok Barang", Component: InventoryCard },
+  { id: "02", label: "PROJECT", title: "Attendance - Aplikasi Absensi dan Perizinan Mobile", Component: AttendanceCard },
+  { id: "03", label: "PROJECT", title: "Rental - Platform Sewa Lapangan", Component: RentalCard },
+  { id: "04", label: "PROJECT", title: "ERP - Sistem Manajemen Logistik", Component: ErpCard },
+  { id: "05", label: "PROJECT", title: "Marketplace - Platform Jual Beli Online", Component: MarketplaceCard },
 ];
 
-// Data Aset Gambar Melayang
 const floatingImages = [
   { id: 1, src: "/gambar1.png", className: styles.asset1, initialX: -30, initialY: -30, rotate: -15, delay: 0.1 },
   { id: 2, src: "/gambar2.png", className: styles.asset2, initialX: 30, initialY: -15, rotate: 20, delay: 0.2 },
@@ -40,6 +39,7 @@ const floatingImages = [
 
 export default function ProjectSection() {
   const [activeProject, setActiveProject] = useState(null);
+  const [pendingProject, setPendingProject] = useState(null);
   
   const headerRef = useRef(null);
   const { scrollYProgress: headerScrollProgress } = useScroll({
@@ -55,6 +55,40 @@ export default function ProjectSection() {
 
   return (
     <>
+      <AnimatePresence>
+        {pendingProject && (
+          <motion.div
+            className={styles.modalOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className={styles.modalContent}
+              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+            >
+              <button className={styles.closeModalBtn} onClick={() => setPendingProject(null)}>
+                <X size={20} />
+              </button>
+              
+              <h3 className={styles.modalTitle}>Peringatan Live Demo</h3>
+              <p className={styles.modalDesc}>
+                Semua interaksi dan data yang Anda masukkan bersifat offline, hanya disimpan sementara di perangkat lokal Anda, tidak akan disalahgunakan, dan dijamin <strong>100% aman</strong>.
+              </p>
+              
+              <div className={styles.modalActions}>
+                <button className={styles.btnUnderstand} onClick={() => {
+                  setActiveProject(pendingProject);
+                  setPendingProject(null);
+                }}>Mengerti</button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {activeProject === "01" && <InventoryApp onClose={() => setActiveProject(null)} />}
         {activeProject === "02" && <AttendanceApp onClose={() => setActiveProject(null)} />}
@@ -73,9 +107,6 @@ export default function ProjectSection() {
               initial={{ opacity: 0, x: img.initialX, y: img.initialY, rotate: img.rotate - 30 }}
               whileInView={{ opacity: 1, x: 0, y: 0, rotate: img.rotate }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              
-              // KUNCI ANTI BUG MOBILE: 
-              // Berikan margin positif yang besar agar sensor mendeteksi elemen bahkan saat masih jauh di luar layar
               viewport={{ once: true, margin: "200px" }} 
             >
               <motion.div
@@ -106,8 +137,6 @@ export default function ProjectSection() {
 
         <div className={styles.cardsContainer}>
           {projects.map((project, index) => {
-            // FIX ANTI-GETAR (JITTER): Menggunakan 'svh' agar ukuran tinggi 
-            // tidak berubah saat address bar HP muncul/hilang
             const stickyTop = `calc(10svh + ${index * 24}px)`;
 
             return (
@@ -128,13 +157,13 @@ export default function ProjectSection() {
                         <span className={styles.cardTitle}>{project.title}</span>
                       </div>
                     </div>
-                    <button className={styles.tryButton} onClick={() => setActiveProject(project.id)}>
+                    <button className={styles.tryButton} onClick={() => setPendingProject(project.id)}>
                       LIVE PROJECT
                     </button>
                   </div>
                   <div className={styles.cardBody}>
                     <div className={styles.mockupWrapper}>
-                      <project.Component onClick={() => setActiveProject(project.id)} />
+                      <project.Component onClick={() => setPendingProject(project.id)} />
                     </div>
                   </div>
                 </div>
